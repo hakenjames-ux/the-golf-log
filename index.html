@@ -33,6 +33,9 @@
   --shadow-sm: 0 1px 4px rgba(15,36,25,0.08);
   --shadow-md: 0 4px 16px rgba(15,36,25,0.12);
   --shadow-lg: 0 12px 40px rgba(15,36,25,0.18);
+  --azalea: #e8a0b0;
+  --azalea-deep: #c4607a;
+  --azalea-pale: #fdf0f4;
   --radius: 2px;
 }
 [data-theme="dark"]{
@@ -198,10 +201,9 @@ body::after{
 header{background:var(--augusta-deep);position:relative;overflow:hidden;}
 header::before{
   content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(
-    90deg,transparent 0,transparent 59px,
-    rgba(255,255,255,0.015) 59px,rgba(255,255,255,0.015) 60px
-  );
+  background:
+    repeating-linear-gradient(90deg,transparent 0,transparent 59px,rgba(255,255,255,0.015) 59px,rgba(255,255,255,0.015) 60px),
+    radial-gradient(ellipse at 95% 50%, rgba(232,160,176,0.08) 0%, transparent 50%);
 }
 .header-top{
   max-width:1160px;margin:0 auto;
@@ -263,7 +265,7 @@ header::before{
 .nav-item.active{color:var(--white);border-bottom-color:var(--gold);}
 
 /* GOLD RULE */
-.gold-rule{height:2px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-light) 50%,var(--gold) 100%);}
+.gold-rule{height:2px;background:linear-gradient(90deg,var(--gold) 0%,var(--azalea) 40%,var(--gold-light) 60%,var(--gold) 100%);}
 
 /* ══════════════════ LAYOUT ══════════════════ */
 .container{max-width:1160px;margin:0 auto;padding:36px 32px 64px;}
@@ -282,7 +284,8 @@ header::before{
   content:'';position:absolute;inset:0;
   background:
     radial-gradient(ellipse at 0% 100%, rgba(201,168,76,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 0%, rgba(58,106,82,0.4) 0%, transparent 50%);
+    radial-gradient(ellipse at 100% 0%, rgba(58,106,82,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 90%, rgba(232,160,176,0.12) 0%, transparent 45%);
 }
 .hero-inner{
   position:relative;z-index:1;
@@ -549,17 +552,55 @@ header::before{
 .tag-downland{border-color:#d0d8b8;color:#3a4a2a;background:#f4f8ec;}
 .log-panel input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:0.7;cursor:pointer;}
 .log-panel input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1;}
-.dark-toggle{position:fixed;bottom:80px;right:20px;z-index:400;background:var(--white);border:1px solid var(--border);border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-md);font-size:1.1rem;transition:all 0.2s;}
+.dark-toggle{position:fixed;bottom:20px;right:20px;z-index:400;background:var(--white);border:1px solid var(--border);border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-md);font-size:1.1rem;transition:all 0.2s;}
 .dark-toggle:hover{transform:scale(1.1);box-shadow:var(--shadow-lg);}
-/* ── MOBILE BOTTOM NAV ── */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);z-index:300;padding:6px 0 env(safe-area-inset-bottom,0);}
+/* ── HAMBURGER MENU ── */
+.hamburger-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;color:rgba(255,255,255,0.8);}
+.hamburger-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
+.mob-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9998;}
+.mob-menu-drawer{display:none;position:fixed;top:0;right:0;bottom:0;width:75%;max-width:300px;background:var(--augusta-deep);z-index:9999;flex-direction:column;box-shadow:-8px 0 32px rgba(0,0,0,0.4);transform:translateX(100%);transition:transform 0.25s ease;}
+.mob-menu-drawer.open{display:flex;transform:translateX(0);}
+.mob-menu-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.mob-menu-title{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);}
+.mob-menu-close{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.3rem;padding:4px;}
+.mob-menu-item{display:flex;align-items:center;gap:14px;padding:16px 20px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;color:rgba(255,255,255,0.75);font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-align:left;width:100%;transition:all 0.15s;}
+.mob-menu-item:hover,.mob-menu-item.active{background:rgba(255,255,255,0.08);color:white;}
+.mob-menu-item.active{border-left:3px solid var(--gold);color:var(--gold);}
+.mob-menu-item svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;flex-shrink:0;}
+.mobile-menu-item{display:flex;align-items:center;gap:16px;width:100%;padding:16px 24px;background:none;border:none;border-bottom:1px solid var(--border);cursor:pointer;color:var(--text);font-family:'Barlow',sans-serif;font-size:1rem;font-weight:500;text-align:left;transition:background 0.1s;}
+.mobile-menu-item:last-child{border-bottom:none;}
+.mobile-menu-item:active{background:var(--panel);}
+.mobile-menu-item.active-section{color:var(--augusta);background:var(--azalea-pale);}
+.mobile-menu-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;color:var(--text-muted);}
+.mobile-menu-item.active-section svg{color:var(--augusta);}
+.profile-layout{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start;}
+.profile-sidenav{position:sticky;top:20px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);}
+.profile-sidenav-item{display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--border);cursor:pointer;color:var(--text-mid);font-family:'Barlow',sans-serif;font-size:0.84rem;font-weight:500;text-align:left;transition:all 0.15s;}
+.profile-sidenav-item:last-child{border-bottom:none;}
+.profile-sidenav-item:hover{background:var(--panel);color:var(--augusta-deep);}
+.profile-sidenav-item.active{background:var(--panel);color:var(--augusta-deep);font-weight:700;border-left:3px solid var(--gold);}
+.profile-sidenav-item.danger-item{color:var(--danger);}
+.profile-sidenav-item.danger-item:hover{background:#fff5f5;}
+.profile-sidenav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.profile-body>div{display:none;}
+.profile-body>div.active{display:block;}
+@media(max-width:768px){
+  .profile-layout{grid-template-columns:1fr !important;}
+  .profile-sidenav{position:static;display:flex;flex-wrap:wrap;gap:0;margin-bottom:16px;}
+  .profile-sidenav-item{flex:1 0 45%;border-bottom:1px solid var(--border);border-left:none !important;font-size:0.75rem;padding:11px 12px;}
+  .profile-sidenav-item.active{border-bottom:2px solid var(--gold);background:var(--panel);}
+}
+/* Mobile nav — hidden by default, shown only on mobile */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);z-index:9000;padding:6px 0 env(safe-area-inset-bottom,0);}
 .mobile-nav-inner{display:flex;justify-content:space-around;align-items:center;}
 .mobile-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px;background:none;border:none;cursor:pointer;color:var(--text-muted);font-family:'Barlow Condensed',sans-serif;font-size:0.55rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;min-width:48px;transition:color 0.15s;}
 .mobile-nav-btn.active{color:var(--augusta);}
 .mobile-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+/* Bottom nav removed — header hamburger used instead */
+#mNavMenuBtn{display:none !important;}
 @media(max-width:768px){
   /* Navigation */
-  .mobile-nav{display:block;}
+  .mob-menu-toggle{display:flex !important;align-items:center;justify-content:center;}
   #appShell nav,#appShell .header-nav{display:none;}
   /* Header */
   .header-top{padding:0 12px;min-height:56px;}
@@ -569,7 +610,7 @@ header::before{
   .user-name{font-size:0.75rem;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .sign-out-btn{font-size:0.65rem;padding:5px 10px;}
   /* Layout */
-  .container{padding:16px 12px 90px;}
+  .container{padding:16px 12px 32px;}
   /* Hero */
   .hero-inner{grid-template-columns:1fr !important;gap:0 !important;text-align:center;}
   .hero-divider{display:none;}
@@ -577,6 +618,7 @@ header::before{
   .hero-stats{grid-template-columns:repeat(2,1fr);padding:16px;}
   /* All two-column grids go single column */
   .two-col,.mob-grid-2{grid-template-columns:1fr !important;}
+  .mob-grid-2 .log-btn,.mob-grid-2 button{width:100%;}
   /* Charts */
   .chart-panel{overflow-x:hidden;}
   /* Courses */
@@ -608,11 +650,11 @@ header::before{
   .feed-score{width:100%;text-align:left;margin-top:6px;}
   /* Filter pills wrap */
   .courses-bar,.filter-bar{flex-wrap:wrap;}
-  /* Stack all form rows */
-  .form-row{flex-direction:column !important;}
-  .form-row .form-group{width:100% !important;}
+  /* Stack all form rows on mobile */
+  .form-row{grid-template-columns:1fr !important;}
+  .form-row .form-group{width:100%;}
+  select.form-input,input[type="date"].form-input,input[type="datetime-local"].form-input{width:100%;box-sizing:border-box;}
   /* Tee time - stack */
-  div[style*="grid-template-columns:1fr 1fr 1fr auto"]{grid-template-columns:1fr 1fr !important;}
   /* Section heads wrap */
   .section-head{flex-wrap:wrap;gap:6px;}
   /* Course action buttons stack */
@@ -622,7 +664,6 @@ header::before{
   /* Profile header grid */
   .hero-inner[style*="grid-template-columns:1fr 1px 1fr 1px auto"]{grid-template-columns:1fr !important;}
   /* Calculator grid */
-  div[style*="grid-template-columns:1fr 1fr 1fr auto"]{grid-template-columns:1fr 1fr !important;}
   /* Account settings */
   .panel div[style*="display:flex;gap:8px"]{flex-wrap:wrap;}
 }
@@ -827,6 +868,9 @@ header::before{
       <div class="header-user">
         <span class="user-name" id="userPill">—</span>
         <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
+        <button class="mob-menu-toggle" id="headerMenuBtn" onclick="toggleMobileMenu()">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="rgba(255,255,255,0.7)" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </div>
     </div>
     <div class="header-nav">
@@ -948,7 +992,7 @@ header::before{
           <span class="section-label">⏰ Tee Time Reminder</span>
           <span id="notifStatus" style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);"></span>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:flex-end;">
+        <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:flex-end;">
           <div class="form-group" style="margin:0;"><label class="form-label">Course</label><input class="form-input" id="reminderCourse" type="text" placeholder="e.g. St Andrews"></div>
           <div class="form-group" style="margin:0;"><label class="form-label">Tee Time</label><input class="form-input" id="reminderTime" type="datetime-local"></div>
           <div class="form-group" style="margin:0;"><label class="form-label">Remind me before</label>
@@ -1068,7 +1112,7 @@ header::before{
     <div class="section-head" style="margin-bottom:20px;">
       <span class="section-label">Playing Handicap Calculator</span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
+    <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
       <div class="form-group" style="margin:0;">
         <label class="form-label">Course Rating</label>
         <input class="form-input" id="calcRating" type="number" step="0.1" placeholder="e.g. 71.2">
@@ -1234,145 +1278,179 @@ header::before{
 
   <!-- Profile header card -->
   <div class="scorecard-hero" style="margin-bottom:24px;">
-    <div class="hero-inner" style="grid-template-columns:1fr 1px 1fr 1px auto;">
+    <div class="hero-inner" style="grid-template-columns:1fr 1px 1fr;">
       <div class="hero-hcp" style="flex:1;">
         <div class="hero-hcp-label">Golfer</div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--white);line-height:1.1;" id="profileName">—</div>
-        <div class="hero-hcp-sub" id="profileEmail">—</div>
+        <div class="hero-hcp-sub" id="profileEmail" style="display:none;">—</div>
       </div>
       <div class="hero-divider"></div>
       <div class="hero-hcp" style="text-align:center;">
         <div class="hero-hcp-label">Handicap Index</div>
         <div class="hero-hcp-value" id="profileHcp">—</div>
       </div>
-      <div class="hero-divider"></div>
-      <div style="padding:32px 40px;display:flex;flex-direction:column;gap:16px;justify-content:center;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--moss-pale);">Public Profile</span>
-          <label style="position:relative;display:inline-block;width:40px;height:22px;cursor:pointer;">
-            <input type="checkbox" id="profilePublicToggle" style="opacity:0;width:0;height:0;position:absolute;">
-            <span id="toggleTrack" style="position:absolute;inset:0;background:rgba(255,255,255,0.2);border-radius:11px;transition:background 0.2s;"></span>
-            <span id="toggleThumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;background:white;border-radius:50%;transition:transform 0.2s;"></span>
-          </label>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+
+    <!-- Sidebar nav -->
+    <nav class="profile-sidenav">
+      <button class="profile-sidenav-item active" onclick="showProfileSection('ps-overview',this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Overview
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-public',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Public Profile
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-account',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Account Settings
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-export',this)">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Data
+      </button>
+      <button class="profile-sidenav-item danger-item" onclick="showProfileSection('ps-danger',this)">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Danger Zone
+      </button>
+    </nav>
+
+    <!-- Profile body -->
+    <div class="profile-body">
+
+      <!-- OVERVIEW -->
+      <div id="ps-overview" class="active">
+        <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+          <div class="panel">
+            <div class="section-head" style="margin-bottom:16px;"><span class="section-label">Home Course</span></div>
+            <div id="homeCourseDisplay" style="margin-bottom:14px;"></div>
+            <div class="csearch-wrap">
+              <input class="form-input" id="homeCourseSearch" type="text" placeholder="Search for your home course…" autocomplete="off">
+              <div class="csearch-dropdown" id="homeCourseDropdown"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head" style="margin-bottom:16px;">
+              <span class="section-label">Favourite Courses</span>
+              <span class="section-count" id="favCount">0</span>
+            </div>
+            <div id="favCoursesList" style="margin-bottom:14px;"></div>
+            <div class="csearch-wrap">
+              <input class="form-input" id="favCourseSearch" type="text" placeholder="Add a favourite course…" autocomplete="off">
+              <div class="csearch-dropdown" id="favCourseDropdown"></div>
+            </div>
+          </div>
         </div>
-        <div id="profileShareUrl" style="display:none;">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Shareable Link</div>
-          <div style="font-size:0.72rem;color:rgba(255,255,255,0.6);font-weight:300;word-break:break-all;" id="profileShareLink">—</div>
-          <button onclick="copyProfileLink()" style="margin-top:6px;background:none;border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border-radius:2px;cursor:pointer;">Copy Link</button>
+        <div class="panel" style="margin-bottom:24px;">
+          <div class="section-head" style="margin-bottom:20px;">
+            <span class="section-label">Achievements</span>
+            <span class="section-count" id="achievementCount">0 earned</span>
+          </div>
+          <div id="achievementsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;"></div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
-
-    <!-- Home course -->
-    <div class="panel">
-      <div class="section-head" style="margin-bottom:16px;">
-        <span class="section-label">Home Course</span>
-      </div>
-      <div id="homeCourseDisplay" style="margin-bottom:14px;"></div>
-      <div class="csearch-wrap">
-        <input class="form-input" id="homeCourseSearch" type="text" placeholder="Search for your home course…" autocomplete="off">
-        <div class="csearch-dropdown" id="homeCourseDropdown"></div>
-      </div>
-    </div>
-
-    <!-- Favourite courses -->
-    <div class="panel">
-      <div class="section-head" style="margin-bottom:16px;">
-        <span class="section-label">Favourite Courses</span>
-        <span class="section-count" id="favCount">0</span>
-      </div>
-      <div id="favCoursesList" style="margin-bottom:14px;"></div>
-      <div class="csearch-wrap">
-        <input class="form-input" id="favCourseSearch" type="text" placeholder="Add a favourite course…" autocomplete="off">
-        <div class="csearch-dropdown" id="favCourseDropdown"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Achievements -->
-  <div class="panel">
-    <div class="section-head" style="margin-bottom:20px;">
-      <span class="section-label">Achievements</span>
-      <span class="section-count" id="achievementCount">0 earned</span>
-    </div>
-    <div id="achievementsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
-  </div>
-
-  <!-- My Bag -->
-  <div class="panel" style="margin-top:24px;">
-    <div class="section-head" style="margin-bottom:16px;">
-      <span class="section-label">🏌️ My Bag</span>
-      <span class="section-count" id="bagCount">0 clubs</span>
-    </div>
-    <div id="bagGrid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:32px;"></div>
-    <div style="display:flex;gap:8px;">
-      <input class="form-input" id="customClubInput" type="text" placeholder="e.g. Titleist TSR1 Driver, Callaway Apex 7 Iron…" style="flex:1;">
-      <button class="log-btn" id="addCustomClubBtn" style="width:auto;padding:11px 18px;white-space:nowrap;">Add Club</button>
-    </div>
-    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-weight:300;">Click any club to remove it from your bag.</div>
-  </div>
-
-  <!-- Round History -->
-  <div class="panel" style="margin-top:24px;padding:0;overflow:hidden;">
-    <div class="section-head" style="padding:18px 24px 14px;border-bottom:2px solid var(--border);margin-bottom:0;">
-      <span class="section-label">Round History</span>
-      <button class="filter-pill" id="clearAllBtn" style="border-color:#f0c0c0;color:var(--danger);">Clear All</button>
-    </div>
-    <table class="sc-table">
-      <thead><tr><th>Course</th><th>Date</th><th>Par</th><th>Score</th><th>+/−</th><th>Diff.</th><th></th></tr></thead>
-      <tbody id="historyBody"></tbody>
-    </table>
-  </div>
-
-  <!-- Account Settings -->
-  <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
-
-    <!-- Change name & password -->
-    <div class="panel">
-      <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Account Settings</span></div>
-
-      <div class="form-group">
-        <label class="form-label">Display Name</label>
-        <div style="display:flex;gap:8px;">
-          <input class="form-input" id="newDisplayName" type="text" placeholder="Your display name" style="flex:1;">
-          <button class="log-btn" id="saveDisplayNameBtn" style="width:auto;padding:11px 16px;white-space:nowrap;">Save</button>
+        <div class="panel" style="margin-bottom:24px;">
+          <div class="section-head" style="margin-bottom:16px;">
+            <span class="section-label">🏌️ My Bag</span>
+            <span class="section-count" id="bagCount">0 clubs</span>
+          </div>
+          <div id="bagGrid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:32px;"></div>
+          <div style="display:flex;gap:8px;">
+            <input class="form-input" id="customClubInput" type="text" placeholder="e.g. Titleist TSR1 Driver…" style="flex:1;">
+            <button class="log-btn" id="addCustomClubBtn" style="width:auto;padding:11px 18px;white-space:nowrap;">Add Club</button>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-weight:300;">Click any club to remove it.</div>
+        </div>
+        <div class="panel" style="padding:0;overflow:hidden;">
+          <div class="section-head" style="padding:18px 24px 14px;border-bottom:2px solid var(--border);margin-bottom:0;">
+            <span class="section-label">Round History</span>
+            <button class="filter-pill" id="clearAllBtn" style="border-color:#f0c0c0;color:var(--danger);">Clear All</button>
+          </div>
+          <table class="sc-table">
+            <thead><tr><th>Course</th><th>Date</th><th>Par</th><th>Score</th><th>+/−</th><th>Diff.</th><th></th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
         </div>
       </div>
 
-      <div class="holes-sep">Change Password</div>
+      <!-- PUBLIC PROFILE -->
+      <div id="ps-public">
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:20px;"><span class="section-label">Public Profile</span></div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;font-weight:300;line-height:1.6;">When enabled, anyone with your link can view your handicap, achievements and favourite courses.</p>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+            <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
+              <input type="checkbox" id="profilePublicToggle" style="opacity:0;width:0;height:0;position:absolute;">
+              <span id="toggleTrack" style="position:absolute;inset:0;background:rgba(0,0,0,0.15);border-radius:12px;transition:background 0.2s;"></span>
+              <span id="toggleThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
+            </label>
+            <div>
+              <div style="font-weight:600;color:var(--augusta-deep);font-size:0.88rem;" id="profileToggleLabel">Profile is Private</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Toggle to make your profile public</div>
+            </div>
+          </div>
+          <div id="profileShareUrl" style="display:none;">
+            <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;font-weight:300;">Share this link with friends to show off your stats.</p>
+            <button onclick="copyProfileLink()" class="log-btn" style="display:inline-flex;align-items:center;gap:8px;">🔗 Copy Profile Link</button>
+            <div id="profileShareLink" style="display:none;">—</div>
+          </div>
+        </div>
+      </div>
 
-      <div class="form-group">
-        <label class="form-label">New Password</label>
-        <input class="form-input" id="newPassword" type="password" placeholder="At least 6 characters">
+      <!-- ACCOUNT SETTINGS -->
+      <div id="ps-account">
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Display Name</span></div>
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <div style="display:flex;gap:8px;">
+              <input class="form-input" id="newDisplayName" type="text" placeholder="Your display name" style="flex:1;">
+              <button class="log-btn" id="saveDisplayNameBtn" style="width:auto;padding:11px 16px;white-space:nowrap;">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Change Password</span></div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input class="form-input" id="newPassword" type="password" placeholder="At least 6 characters">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password">
+          </div>
+          <button class="log-btn" id="changePasswordBtn">Change Password</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Confirm New Password</label>
-        <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password">
-      </div>
-      <button class="log-btn" id="changePasswordBtn">Change Password</button>
-    </div>
 
-    <!-- Export & Danger zone -->
-    <div>
-      <div class="panel" style="margin-bottom:16px;">
-        <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Data</span></div>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;font-weight:300;">Download all your rounds as a CSV file you can open in Excel or Google Sheets.</p>
-        <button class="log-btn" id="exportCsvBtn">⬇ Export Rounds as CSV</button>
-        <div style="height:8px;"></div>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;font-weight:300;margin-top:8px;">Export your full profile data including favourites and home course.</p>
-        <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">⬇ Export Full Profile</button>
+      <!-- EXPORT DATA -->
+      <div id="ps-export">
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Rounds</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download all your rounds as a CSV — opens in Excel or Google Sheets.</p>
+          <button class="log-btn" id="exportCsvBtn">⬇ Export Rounds as CSV</button>
+        </div>
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Full Profile</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download your full profile as JSON including handicap, home course, favourites and all rounds.</p>
+          <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">⬇ Export Full Profile</button>
+        </div>
       </div>
 
-      <div class="panel" style="border:1px solid #f0c0c0;">
-        <div class="section-head" style="margin-bottom:14px;"><span class="section-label" style="color:var(--danger);">Danger Zone</span></div>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:14px;font-weight:300;">Permanently delete your account and all associated data. This cannot be undone.</p>
-        <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">Delete My Account</button>
+      <!-- DANGER ZONE -->
+      <div id="ps-danger">
+        <div class="panel" style="border:1px solid #f0c0c0;">
+          <div class="section-head" style="margin-bottom:14px;"><span class="section-label" style="color:var(--danger);">Danger Zone</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;line-height:1.6;">Permanently delete your account and all associated data including rounds, favourites, societies and match history. This <strong>cannot</strong> be undone.</p>
+          <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">🗑 Delete My Account</button>
+        </div>
       </div>
-    </div>
-  </div>
+
+    </div><!-- /profile-body -->
+  </div><!-- /profile-layout -->
 
 </div>
 
@@ -1603,50 +1681,21 @@ header::before{
 <!-- Dark mode toggle -->
 <button class="dark-toggle" id="darkToggleBtn" title="Toggle dark mode">🌙</button>
 
-<!-- Mobile bottom navigation -->
-<nav class="mobile-nav" id="mobileNav">
-  <div class="mobile-nav-inner">
-    <button class="mobile-nav-btn active" id="mNavDashboard">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Home
-    </button>
-    <button class="mobile-nav-btn" id="mNavCourses">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-      Courses
-    </button>
-    <button class="mobile-nav-btn" id="mNavStats">
-      <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-      Stats
-    </button>
-    <button class="mobile-nav-btn" id="mNavProfile">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Profile
-    </button>
-    <button class="mobile-nav-btn" id="mNavMore" onclick="toggleMoreDrawer()">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
-      More
-    </button>
+<!-- Mobile nav — inside appShell so hidden until logged in -->
+<div id="mobileMenuOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:8998;" onclick="closeMobileMenu()"></div>
+<div id="mobileMenuDrawer" style="display:none;position:fixed;top:0;left:0;right:0;background:var(--white);z-index:8999;max-height:100vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+  <div style="background:var(--augusta-deep);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Navigation</div>
+    <button onclick="closeMobileMenu()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.4rem;cursor:pointer;line-height:1;padding:0;">✕</button>
   </div>
-</nav>
-
-<!-- More drawer -->
-<div id="moreDrawer" style="display:none;position:fixed;bottom:60px;left:0;right:0;background:var(--white);border-top:2px solid var(--gold);z-index:400;padding:8px 0;box-shadow:0 -4px 20px rgba(0,0,0,0.15);">
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;">
-    <button class="mobile-nav-btn" id="mNavLeaderboard" onclick="closeThenNav('leaderboard',this)">
-      <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
-      Leaderboard
-    </button>
-    <button class="mobile-nav-btn" id="mNavSocial" onclick="closeThenNav('social',this)">
-      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Social
-    </button>
-    <button class="mobile-nav-btn" id="mNavCommunity" onclick="closeThenNav('community',this)">
-      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Community
-    </button>
-  </div>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('courses')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span>Courses</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('leaderboard')"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Leaderboard</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('stats')"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Stats</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('social')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('community')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Community</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </div>
-<div id="moreDrawerOverlay" style="display:none;position:fixed;inset:0;z-index:399;" onclick="toggleMoreDrawer()"></div>
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -1794,6 +1843,8 @@ document.addEventListener('click',function(e){
   if(rb){openReviewModal(rb.dataset.id,rb.dataset.name,rb.dataset.loc,rb.dataset.county);return;}
   var wb=e.target.closest('.weather-btn');
   if(wb){openWeatherModal(wb.dataset.name,wb.dataset.loc);return;}
+  var bb=e.target.closest('.book-btn');
+  if(bb){bookTeeTime(bb.dataset.name,bb.dataset.loc);return;}
   var sb2=e.target.closest('.star-btn');
   if(sb2){setStarRating(sb2.dataset.field,parseInt(sb2.dataset.val));return;}
   if(id==='reviewModal'){closeReviewModal();return;}
@@ -2075,6 +2126,7 @@ async function renderCoursesBrowser(){
         '<div style="display:flex;gap:8px;margin-top:10px;">'+
           '<button class="cc-action-btn review-btn" data-id="'+c.id+'" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'')+'" data-county="'+(c.county||'')+'">⭐ Review</button>'+
           '<button class="cc-action-btn weather-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">🌤 Weather</button>'+
+          '<button class="cc-action-btn book-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">📅 Book</button>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -2369,6 +2421,15 @@ function runCalculator(){
   document.getElementById('calcResult').style.display='grid';
 }
 
+// ── PROFILE SECTION NAV ───────────────────────────────────────────────────
+function showProfileSection(id,btn){
+  document.querySelectorAll('.profile-body>div').forEach(function(d){d.classList.remove('active');});
+  document.querySelectorAll('.profile-sidenav-item').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById(id);
+  if(el) el.classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
 // ── PROFILE ───────────────────────────────────────────────────────────────
 var profileData=null, favourites=[], profileSearchTimer=null;
 
@@ -2418,10 +2479,12 @@ function updateToggleUI(isPublic){
   var track=document.getElementById('toggleTrack');
   var thumb=document.getElementById('toggleThumb');
   var toggle=document.getElementById('profilePublicToggle');
+  var label=document.getElementById('profileToggleLabel');
   if(!track) return;
   toggle.checked=isPublic;
-  track.style.background=isPublic?'var(--gold)':'rgba(255,255,255,0.2)';
-  thumb.style.transform=isPublic?'translateX(18px)':'translateX(0)';
+  track.style.background=isPublic?'var(--gold)':'rgba(0,0,0,0.15)';
+  thumb.style.transform=isPublic?'translateX(20px)':'translateX(0)';
+  if(label) label.textContent=isPublic?'Profile is Public':'Profile is Private';
 }
 
 function updateShareUrl(isPublic){
@@ -2445,7 +2508,9 @@ async function toggleProfilePublic(){
 
 function copyProfileLink(){
   var link=document.getElementById('profileShareLink').textContent;
-  navigator.clipboard.writeText(link).then(function(){toast('Link copied! ✓');});
+  navigator.clipboard.writeText(link).then(function(){
+    toast('Profile link copied! ✓');
+  });
 }
 
 function renderHomeCourse(){
@@ -2972,6 +3037,12 @@ async function submitReview(){
   renderCoursesBrowser();
 }
 
+function bookTeeTime(name,loc){
+  // Search Google for the course booking page
+  var query=encodeURIComponent(name+' '+(loc||'')+' tee time booking');
+  window.open('https://www.google.com/search?q='+query,'_blank');
+}
+
 // ── WEATHER ────────────────────────────────────────────────────────────────
 var WEATHER_KEY='demo'; // Uses open-meteo (free, no key needed)
 
@@ -3068,37 +3139,30 @@ function applyDark(on,save){
 setTimeout(initDarkMode,300);
 
 // ── MOBILE NAV ────────────────────────────────────────────────────────────
-document.addEventListener('click',function(e){
-  var mmap={mNavDashboard:'dashboard',mNavCourses:'courses',mNavStats:'stats',mNavProfile:'profile'};
-  var btn=e.target.closest('.mobile-nav-btn');
-  var id=btn&&btn.id;
-  if(id==='mNavMore') return; // handled by onclick
-  if(id&&mmap[id]){
-    toggleMoreDrawer(true); // close drawer if open
-    var section=mmap[id];
-    var desktopMap={dashboard:'navDashboard',courses:'navCourses',stats:'navStats',profile:'navProfile'};
-    showSection(section,document.getElementById(desktopMap[section]));
-    document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
-    btn.classList.add('active');
-  }
-});
+// Bottom nav removed — header hamburger handles all navigation via mobileMenuNav
 
-function toggleMoreDrawer(forceClose){
-  var d=document.getElementById('moreDrawer');
-  var o=document.getElementById('moreDrawerOverlay');
+function toggleMobileMenu(){
+  var d=document.getElementById('mobileMenuDrawer');
+  var o=document.getElementById('mobileMenuOverlay');
   var open=d.style.display==='block';
-  var shouldClose=forceClose||open;
-  d.style.display=shouldClose?'none':'block';
-  o.style.display=shouldClose?'none':'block';
-  document.getElementById('mNavMore').classList.toggle('active',!shouldClose);
+  d.style.display=open?'none':'block';
+  o.style.display=open?'none':'block';
 }
 
-function closeThenNav(section,btn){
-  toggleMoreDrawer(true);
-  var desktopMap={leaderboard:'navLeaderboard',social:'navSocial',community:'navCommunity'};
+function closeMobileMenu(){
+  document.getElementById('mobileMenuDrawer').style.display='none';
+  document.getElementById('mobileMenuOverlay').style.display='none';
+}
+
+function mobileMenuNav(section){
+  closeMobileMenu();
+  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',community:'navCommunity',profile:'navProfile'};
   showSection(section,document.getElementById(desktopMap[section]));
+  var bottomMap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile'};
   document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
-  document.getElementById('mNavMore').classList.add('active');
+  var bottomId=bottomMap[section];
+  if(bottomId) document.getElementById(bottomId).classList.add('active');
+  document.querySelectorAll('.mobile-menu-item').forEach(function(b){b.classList.remove('active-section');});
 }
 
 // ── ANIMATED COUNTERS ─────────────────────────────────────────────────────
@@ -3749,10 +3813,7 @@ function showSection(s,btn){
   if(s==='social') loadSocial();
   if(s==='community') loadCommunity();
   if(s==='profile') loadProfile();
-  // Sync mobile nav
-  var mmap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile',leaderboard:'mNavMore',social:'mNavMore',community:'mNavMore'};
-  document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
-  var mid=mmap[s]; if(mid){var mel=document.getElementById(mid);if(mel)mel.classList.add('active');}
+  // No bottom nav to sync on mobile — header hamburger used
 }
 
 function fDate(s){
