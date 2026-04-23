@@ -151,7 +151,13 @@ body::after{
   font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;
   color:var(--augusta-deep);margin-bottom:6px;
 }
-.auth-subheading{font-size:0.82rem;color:var(--text-muted);margin-bottom:28px;font-weight:300;}
+.landing-features{position:relative;z-index:2;margin-top:32px;display:flex;flex-direction:column;gap:18px;}
+.landing-feature{display:flex;align-items:flex-start;gap:14px;}
+.landing-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+.landing-feat-title{font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.landing-feat-desc{font-size:0.8rem;color:rgba(255,255,255,0.55);font-weight:300;line-height:1.4;}
+.landing-footer{position:relative;z-index:2;margin-top:32px;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
+@media(max-width:760px){.landing-features{display:none;}.landing-footer{display:none;}}
 .auth-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:28px;gap:0;}
 .auth-tab{
   padding:10px 0;margin-right:28px;font-size:0.78rem;font-weight:600;
@@ -573,6 +579,7 @@ header::before{
 .mobile-menu-item.active-section{color:var(--augusta);background:var(--azalea-pale);}
 .mobile-menu-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;color:var(--text-muted);}
 .mobile-menu-item.active-section svg{color:var(--augusta);}
+.profile-layout{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start;}
 .profile-sidenav{position:sticky;top:20px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);}
 .profile-sidenav-item{display:flex;align-items:center;gap:10px;width:100%;padding:13px 16px;background:none;border:none;border-bottom:1px solid var(--border);cursor:pointer;color:var(--text-mid);font-family:'Barlow',sans-serif;font-size:0.84rem;font-weight:500;text-align:left;transition:all 0.15s;}
 .profile-sidenav-item:last-child{border-bottom:none;}
@@ -821,6 +828,44 @@ header::before{
       <span class="auth-wordmark">The Golf Log</span>
       <span class="auth-sub">Golf Score &amp; Handicap Tracker</span>
     </div>
+    <div class="landing-features">
+      <div class="landing-feature">
+        <span class="landing-icon">⛳</span>
+        <div>
+          <div class="landing-feat-title">WHS Handicap Tracking</div>
+          <div class="landing-feat-desc">Official World Handicap System calculation after every round</div>
+        </div>
+      </div>
+      <div class="landing-feature">
+        <span class="landing-icon">📊</span>
+        <div>
+          <div class="landing-feat-title">Stats &amp; Insights</div>
+          <div class="landing-feat-desc">Score trends, par breakdowns, driving distance and more</div>
+        </div>
+      </div>
+      <div class="landing-feature">
+        <span class="landing-icon">🏌️</span>
+        <div>
+          <div class="landing-feat-title">800+ UK Courses</div>
+          <div class="landing-feat-desc">Search and log rounds on any course in Great Britain</div>
+        </div>
+      </div>
+      <div class="landing-feature">
+        <span class="landing-icon">🏆</span>
+        <div>
+          <div class="landing-feat-title">Societies &amp; Tournaments</div>
+          <div class="landing-feat-desc">Create groups, run competitions and challenge friends</div>
+        </div>
+      </div>
+      <div class="landing-feature">
+        <span class="landing-icon">🌤</span>
+        <div>
+          <div class="landing-feat-title">Course Weather &amp; Reviews</div>
+          <div class="landing-feat-desc">Live weather and member ratings for every course</div>
+        </div>
+      </div>
+    </div>
+    <div class="landing-footer">Free to use · No ads · Built for golfers</div>
   </div>
   <div class="auth-divider-vert"></div>
   <div class="auth-right">
@@ -891,9 +936,11 @@ header::before{
   <!-- DASHBOARD -->
   <div class="container" id="section-dashboard">
     <div class="scorecard-hero">
-      <div class="hero-inner">
-        <div class="hero-hcp">
-          <div class="hero-hcp-label">Handicap Index</div>
+      <div class="hero-inner" style="grid-template-columns:auto 1px 1fr;">
+        <div class="hero-hcp" style="min-width:180px;">
+          <div class="hero-hcp-label">Welcome back</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--white);line-height:1.1;margin-bottom:6px;" id="dashUserName">—</div>
+          <div class="hero-hcp-label" style="margin-top:8px;">Handicap Index</div>
           <div class="hero-hcp-value" id="hcpDisplay">—</div>
           <div class="hero-hcp-sub" id="hcpSubtitle">No rounds logged yet</div>
         </div>
