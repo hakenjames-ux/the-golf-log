@@ -928,7 +928,6 @@ header::before{
       <button class="nav-item" id="navStats">Stats</button>
       <button class="nav-item" id="navSocial">Social</button>
       <button class="nav-item" id="navCommunity">Community</button>
-      <button class="nav-item" id="navProfile">Profile</button>
     </div>
     <div class="gold-rule"></div>
   </header>
@@ -1058,6 +1057,190 @@ header::before{
         <div id="activeReminders" style="margin-top:14px;"></div>
       </div>
     </div>
+
+    <!-- ── PROFILE ─────────────────────────────────────────────────── -->
+    <div style="height:1px;background:var(--border);margin:32px 0 28px;"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px;">Your Profile</div>
+
+
+  <!-- Profile header card -->
+  <div class="scorecard-hero" style="margin-bottom:24px;">
+    <div class="hero-inner" style="grid-template-columns:1fr 1px 1fr;">
+      <div class="hero-hcp" style="flex:1;">
+        <div class="hero-hcp-label">Golfer</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--white);line-height:1.1;" id="profileName">—</div>
+        <div class="hero-hcp-sub" id="profileEmail" style="display:none;">—</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-hcp" style="text-align:center;">
+        <div class="hero-hcp-label">Handicap Index</div>
+        <div class="hero-hcp-value" id="profileHcp">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-layout">
+
+    <!-- Sidebar nav -->
+    <nav class="profile-sidenav">
+      <button class="profile-sidenav-item active" onclick="showProfileSection('ps-overview',this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Overview
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-public',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Public Profile
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-account',this)">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Account Settings
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-export',this)">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Data
+      </button>
+      <button class="profile-sidenav-item danger-item" onclick="showProfileSection('ps-danger',this)">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Danger Zone
+      </button>
+    </nav>
+
+    <!-- Profile body -->
+    <div class="profile-body">
+
+      <!-- OVERVIEW -->
+      <div id="ps-overview" class="active">
+        <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+          <div class="panel">
+            <div class="section-head" style="margin-bottom:16px;"><span class="section-label">Home Course</span></div>
+            <div id="homeCourseDisplay" style="margin-bottom:14px;"></div>
+            <div class="csearch-wrap">
+              <input class="form-input" id="homeCourseSearch" type="text" placeholder="Search for your home course…" autocomplete="off">
+              <div class="csearch-dropdown" id="homeCourseDropdown"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="section-head" style="margin-bottom:16px;">
+              <span class="section-label">Favourite Courses</span>
+              <span class="section-count" id="favCount">0</span>
+            </div>
+            <div id="favCoursesList" style="margin-bottom:14px;"></div>
+            <div class="csearch-wrap">
+              <input class="form-input" id="favCourseSearch" type="text" placeholder="Add a favourite course…" autocomplete="off">
+              <div class="csearch-dropdown" id="favCourseDropdown"></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="margin-bottom:24px;">
+          <div class="section-head" style="margin-bottom:20px;">
+            <span class="section-label">Achievements</span>
+            <span class="section-count" id="achievementCount">0 earned</span>
+          </div>
+          <div id="achievementsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;"></div>
+        </div>
+        <div class="panel" style="margin-bottom:24px;">
+          <div class="section-head" style="margin-bottom:16px;">
+            <span class="section-label">🏌️ My Bag</span>
+            <span class="section-count" id="bagCount">0 clubs</span>
+          </div>
+          <div id="bagGrid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:32px;"></div>
+          <div style="display:flex;gap:8px;">
+            <input class="form-input" id="customClubInput" type="text" placeholder="e.g. Titleist TSR1 Driver…" style="flex:1;">
+            <button class="log-btn" id="addCustomClubBtn" style="width:auto;padding:11px 18px;white-space:nowrap;">Add Club</button>
+          </div>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-weight:300;">Click any club to remove it.</div>
+        </div>
+        <div class="panel" style="padding:0;overflow:hidden;">
+          <div class="section-head" style="padding:18px 24px 14px;border-bottom:2px solid var(--border);margin-bottom:0;">
+            <span class="section-label">Round History</span>
+            <button class="filter-pill" id="clearAllBtn" style="border-color:#f0c0c0;color:var(--danger);">Clear All</button>
+          </div>
+          <table class="sc-table">
+            <thead><tr><th>Course</th><th>Date</th><th>Par</th><th>Score</th><th>+/−</th><th>Diff.</th><th></th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PUBLIC PROFILE -->
+      <div id="ps-public">
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:20px;"><span class="section-label">Public Profile</span></div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;font-weight:300;line-height:1.6;">When enabled, anyone with your link can view your handicap, achievements and favourite courses.</p>
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
+            <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
+              <input type="checkbox" id="profilePublicToggle" style="opacity:0;width:0;height:0;position:absolute;">
+              <span id="toggleTrack" style="position:absolute;inset:0;background:rgba(0,0,0,0.15);border-radius:12px;transition:background 0.2s;"></span>
+              <span id="toggleThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
+            </label>
+            <div>
+              <div style="font-weight:600;color:var(--augusta-deep);font-size:0.88rem;" id="profileToggleLabel">Profile is Private</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Toggle to make your profile public</div>
+            </div>
+          </div>
+          <div id="profileShareUrl" style="display:none;">
+            <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;font-weight:300;">Share this link with friends to show off your stats.</p>
+            <button onclick="copyProfileLink()" class="log-btn" style="display:inline-flex;align-items:center;gap:8px;">🔗 Copy Profile Link</button>
+            <div id="profileShareLink" style="display:none;">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT SETTINGS -->
+      <div id="ps-account">
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Display Name</span></div>
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <div style="display:flex;gap:8px;">
+              <input class="form-input" id="newDisplayName" type="text" placeholder="Your display name" style="flex:1;">
+              <button class="log-btn" id="saveDisplayNameBtn" style="width:auto;padding:11px 16px;white-space:nowrap;">Save</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Change Password</span></div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input class="form-input" id="newPassword" type="password" placeholder="At least 6 characters">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password">
+          </div>
+          <button class="log-btn" id="changePasswordBtn">Change Password</button>
+        </div>
+      </div>
+
+      <!-- EXPORT DATA -->
+      <div id="ps-export">
+        <div class="panel" style="margin-bottom:16px;">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Rounds</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download all your rounds as a CSV — opens in Excel or Google Sheets.</p>
+          <button class="log-btn" id="exportCsvBtn">⬇ Export Rounds as CSV</button>
+        </div>
+        <div class="panel">
+          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Full Profile</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download your full profile as JSON including handicap, home course, favourites and all rounds.</p>
+          <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">⬇ Export Full Profile</button>
+        </div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div id="ps-danger">
+        <div class="panel" style="border:1px solid #f0c0c0;">
+          <div class="section-head" style="margin-bottom:14px;"><span class="section-label" style="color:var(--danger);">Danger Zone</span></div>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;line-height:1.6;">Permanently delete your account and all associated data including rounds, favourites, societies and match history. This <strong>cannot</strong> be undone.</p>
+          <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">🗑 Delete My Account</button>
+        </div>
+      </div>
+
+    </div><!-- /profile-body -->
+  </div><!-- /profile-layout -->
+
+
+
 
   </div>
 
@@ -1323,187 +1506,6 @@ header::before{
 
 </div>
 
-<!-- PROFILE -->
-<div class="container" id="section-profile" style="display:none">
-
-  <!-- Profile header card -->
-  <div class="scorecard-hero" style="margin-bottom:24px;">
-    <div class="hero-inner" style="grid-template-columns:1fr 1px 1fr;">
-      <div class="hero-hcp" style="flex:1;">
-        <div class="hero-hcp-label">Golfer</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--white);line-height:1.1;" id="profileName">—</div>
-        <div class="hero-hcp-sub" id="profileEmail" style="display:none;">—</div>
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-hcp" style="text-align:center;">
-        <div class="hero-hcp-label">Handicap Index</div>
-        <div class="hero-hcp-value" id="profileHcp">—</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="profile-layout">
-
-    <!-- Sidebar nav -->
-    <nav class="profile-sidenav">
-      <button class="profile-sidenav-item active" onclick="showProfileSection('ps-overview',this)">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Overview
-      </button>
-      <button class="profile-sidenav-item" onclick="showProfileSection('ps-public',this)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Public Profile
-      </button>
-      <button class="profile-sidenav-item" onclick="showProfileSection('ps-account',this)">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-        Account Settings
-      </button>
-      <button class="profile-sidenav-item" onclick="showProfileSection('ps-export',this)">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Export Data
-      </button>
-      <button class="profile-sidenav-item danger-item" onclick="showProfileSection('ps-danger',this)">
-        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        Danger Zone
-      </button>
-    </nav>
-
-    <!-- Profile body -->
-    <div class="profile-body">
-
-      <!-- OVERVIEW -->
-      <div id="ps-overview" class="active">
-        <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
-          <div class="panel">
-            <div class="section-head" style="margin-bottom:16px;"><span class="section-label">Home Course</span></div>
-            <div id="homeCourseDisplay" style="margin-bottom:14px;"></div>
-            <div class="csearch-wrap">
-              <input class="form-input" id="homeCourseSearch" type="text" placeholder="Search for your home course…" autocomplete="off">
-              <div class="csearch-dropdown" id="homeCourseDropdown"></div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="section-head" style="margin-bottom:16px;">
-              <span class="section-label">Favourite Courses</span>
-              <span class="section-count" id="favCount">0</span>
-            </div>
-            <div id="favCoursesList" style="margin-bottom:14px;"></div>
-            <div class="csearch-wrap">
-              <input class="form-input" id="favCourseSearch" type="text" placeholder="Add a favourite course…" autocomplete="off">
-              <div class="csearch-dropdown" id="favCourseDropdown"></div>
-            </div>
-          </div>
-        </div>
-        <div class="panel" style="margin-bottom:24px;">
-          <div class="section-head" style="margin-bottom:20px;">
-            <span class="section-label">Achievements</span>
-            <span class="section-count" id="achievementCount">0 earned</span>
-          </div>
-          <div id="achievementsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;"></div>
-        </div>
-        <div class="panel" style="margin-bottom:24px;">
-          <div class="section-head" style="margin-bottom:16px;">
-            <span class="section-label">🏌️ My Bag</span>
-            <span class="section-count" id="bagCount">0 clubs</span>
-          </div>
-          <div id="bagGrid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;min-height:32px;"></div>
-          <div style="display:flex;gap:8px;">
-            <input class="form-input" id="customClubInput" type="text" placeholder="e.g. Titleist TSR1 Driver…" style="flex:1;">
-            <button class="log-btn" id="addCustomClubBtn" style="width:auto;padding:11px 18px;white-space:nowrap;">Add Club</button>
-          </div>
-          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px;font-weight:300;">Click any club to remove it.</div>
-        </div>
-        <div class="panel" style="padding:0;overflow:hidden;">
-          <div class="section-head" style="padding:18px 24px 14px;border-bottom:2px solid var(--border);margin-bottom:0;">
-            <span class="section-label">Round History</span>
-            <button class="filter-pill" id="clearAllBtn" style="border-color:#f0c0c0;color:var(--danger);">Clear All</button>
-          </div>
-          <table class="sc-table">
-            <thead><tr><th>Course</th><th>Date</th><th>Par</th><th>Score</th><th>+/−</th><th>Diff.</th><th></th></tr></thead>
-            <tbody id="historyBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- PUBLIC PROFILE -->
-      <div id="ps-public">
-        <div class="panel">
-          <div class="section-head" style="margin-bottom:20px;"><span class="section-label">Public Profile</span></div>
-          <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;font-weight:300;line-height:1.6;">When enabled, anyone with your link can view your handicap, achievements and favourite courses.</p>
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;">
-            <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;flex-shrink:0;">
-              <input type="checkbox" id="profilePublicToggle" style="opacity:0;width:0;height:0;position:absolute;">
-              <span id="toggleTrack" style="position:absolute;inset:0;background:rgba(0,0,0,0.15);border-radius:12px;transition:background 0.2s;"></span>
-              <span id="toggleThumb" style="position:absolute;top:3px;left:3px;width:18px;height:18px;background:white;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></span>
-            </label>
-            <div>
-              <div style="font-weight:600;color:var(--augusta-deep);font-size:0.88rem;" id="profileToggleLabel">Profile is Private</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">Toggle to make your profile public</div>
-            </div>
-          </div>
-          <div id="profileShareUrl" style="display:none;">
-            <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
-            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;font-weight:300;">Share this link with friends to show off your stats.</p>
-            <button onclick="copyProfileLink()" class="log-btn" style="display:inline-flex;align-items:center;gap:8px;">🔗 Copy Profile Link</button>
-            <div id="profileShareLink" style="display:none;">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ACCOUNT SETTINGS -->
-      <div id="ps-account">
-        <div class="panel" style="margin-bottom:16px;">
-          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Display Name</span></div>
-          <div class="form-group">
-            <label class="form-label">Display Name</label>
-            <div style="display:flex;gap:8px;">
-              <input class="form-input" id="newDisplayName" type="text" placeholder="Your display name" style="flex:1;">
-              <button class="log-btn" id="saveDisplayNameBtn" style="width:auto;padding:11px 16px;white-space:nowrap;">Save</button>
-            </div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Change Password</span></div>
-          <div class="form-group">
-            <label class="form-label">New Password</label>
-            <input class="form-input" id="newPassword" type="password" placeholder="At least 6 characters">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Confirm New Password</label>
-            <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password">
-          </div>
-          <button class="log-btn" id="changePasswordBtn">Change Password</button>
-        </div>
-      </div>
-
-      <!-- EXPORT DATA -->
-      <div id="ps-export">
-        <div class="panel" style="margin-bottom:16px;">
-          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Rounds</span></div>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download all your rounds as a CSV — opens in Excel or Google Sheets.</p>
-          <button class="log-btn" id="exportCsvBtn">⬇ Export Rounds as CSV</button>
-        </div>
-        <div class="panel">
-          <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Full Profile</span></div>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download your full profile as JSON including handicap, home course, favourites and all rounds.</p>
-          <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">⬇ Export Full Profile</button>
-        </div>
-      </div>
-
-      <!-- DANGER ZONE -->
-      <div id="ps-danger">
-        <div class="panel" style="border:1px solid #f0c0c0;">
-          <div class="section-head" style="margin-bottom:14px;"><span class="section-label" style="color:var(--danger);">Danger Zone</span></div>
-          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;line-height:1.6;">Permanently delete your account and all associated data including rounds, favourites, societies and match history. This <strong>cannot</strong> be undone.</p>
-          <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">🗑 Delete My Account</button>
-        </div>
-      </div>
-
-    </div><!-- /profile-body -->
-  </div><!-- /profile-layout -->
-
-</div>
-
 <!-- SOCIAL -->
 <div class="container" id="section-social" style="display:none">
 
@@ -1744,7 +1746,6 @@ header::before{
   <button class="mobile-menu-item" onclick="mobileMenuNav('stats')"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Stats</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('social')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('community')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Community</span></button>
-  <button class="mobile-menu-item" onclick="mobileMenuNav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </div>
 
 <script>
@@ -1780,6 +1781,7 @@ async function bootApp(u){
   buildHoles();
   await loadRounds();
   renderAll();
+  loadProfile();
   initPhase8();
 }
 
@@ -1810,7 +1812,6 @@ document.addEventListener('click',function(e){
   if(id==='navStats'){showSection('stats',e.target);return;}
   if(id==='navSocial'){showSection('social',e.target);return;}
   if(id==='navCommunity'){showSection('community',e.target);return;}
-  if(id==='navProfile'){showSection('profile',e.target);return;}
   // Account settings
   if(id==='saveDisplayNameBtn'){saveDisplayName();return;}
   if(id==='changePasswordBtn'){changePassword();return;}
@@ -3207,7 +3208,7 @@ function closeMobileMenu(){
 
 function mobileMenuNav(section){
   closeMobileMenu();
-  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',community:'navCommunity',profile:'navProfile'};
+  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',community:'navCommunity'};
   showSection(section,document.getElementById(desktopMap[section]));
   var bottomMap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile'};
   document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
@@ -3853,7 +3854,7 @@ async function deleteAccount(){
 
 // ── NAV & UTILS ───────────────────────────────────────────────────────────
 function showSection(s,btn){
-  ['dashboard','courses','leaderboard','stats','social','community','profile'].forEach(function(x){
+  ['dashboard','courses','leaderboard','stats','social','community'].forEach(function(x){
     document.getElementById('section-'+x).style.display=x===s?'':'none';
   });
   document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active');});
@@ -3863,7 +3864,6 @@ function showSection(s,btn){
   if(s==='stats'){ loadRounds().then(function(){ renderStats(); }); }
   if(s==='social') loadSocial();
   if(s==='community') loadCommunity();
-  if(s==='profile') loadProfile();
   // No bottom nav to sync on mobile — header hamburger used
 }
 
