@@ -1772,7 +1772,8 @@ setTimeout(function(){
 async function bootApp(u){
   currentUser=u;
   var name=u.user_metadata&&u.user_metadata.display_name ? u.user_metadata.display_name : u.email.split('@')[0];
-  document.getElementById('userPill').textContent=name;
+  document.getElementById("userPill").textContent=name;
+  var dashName=document.getElementById("dashUserName"); if(dashName) dashName.textContent=name;
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('appShell').style.display='block';
   document.getElementById('fDate').valueAsDate=new Date();
