@@ -932,6 +932,7 @@ header::before{
       <button class="nav-item" id="navStats">Stats</button>
       <button class="nav-item" id="navSocial">Social</button>
       <button class="nav-item" id="navCommunity">Community</button>
+      <button class="nav-item" id="navProfile">Profile</button>
     </div>
     <div class="gold-rule"></div>
   </header>
@@ -1181,24 +1182,44 @@ header::before{
       </div>
     </div>
 
-    <!-- ── PROFILE ─────────────────────────────────────────────────── -->
-    <div style="height:1px;background:var(--border);margin:32px 0 28px;"></div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px;">Your Profile</div>
+  </div><!-- /section-dashboard -->
 
+  <!-- PROFILE -->
+  <div class="container" id="section-profile" style="display:none">
 
-  <!-- Profile header card -->
+  <!-- Profile hero -->
   <div class="scorecard-hero" style="margin-bottom:24px;">
-    <div class="hero-inner" style="grid-template-columns:1fr 1px 1fr;">
-      <div class="hero-hcp" style="flex:1;">
+    <div class="hero-inner" style="grid-template-columns:auto 1px 1fr 1px auto;">
+
+      <!-- Avatar -->
+      <div class="hero-hcp" style="align-items:center;justify-content:center;padding-right:24px;">
+        <div style="position:relative;display:inline-block;">
+          <div id="avatarDisplay" style="width:76px;height:76px;border-radius:50%;background:var(--augusta-mid);display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid var(--gold);flex-shrink:0;">
+            <span id="avatarInitial" style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:white;line-height:1;">?</span>
+            <img id="avatarImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;">
+          </div>
+          <label for="avatarUpload" title="Change photo" style="position:absolute;bottom:0;right:0;background:var(--gold);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.7rem;box-shadow:0 1px 4px rgba(0,0,0,0.3);">📷</label>
+          <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
+        </div>
+      </div>
+
+      <div class="hero-divider"></div>
+
+      <!-- Name + email -->
+      <div class="hero-hcp" style="padding:0 24px;">
         <div class="hero-hcp-label">Golfer</div>
         <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--white);line-height:1.1;" id="profileName">—</div>
         <div class="hero-hcp-sub" id="profileEmail" style="display:none;">—</div>
       </div>
+
       <div class="hero-divider"></div>
-      <div class="hero-hcp" style="text-align:center;">
+
+      <!-- Handicap -->
+      <div class="hero-hcp" style="text-align:center;padding-left:24px;">
         <div class="hero-hcp-label">Handicap Index</div>
         <div class="hero-hcp-value" id="profileHcp">—</div>
       </div>
+
     </div>
   </div>
 
@@ -1362,10 +1383,7 @@ header::before{
     </div><!-- /profile-body -->
   </div><!-- /profile-layout -->
 
-
-
-
-  </div>
+  </div><!-- /section-profile -->
 
   <!-- COURSES -->
   <div class="container" id="section-courses" style="display:none">
@@ -1515,6 +1533,7 @@ header::before{
     <button class="filter-pill" id="cmChallenges">Challenges</button>
     <button class="filter-pill" id="cmTournaments">Tournaments</button>
     <button class="filter-pill" id="cmCourseOfMonth">Course of Month</button>
+    <button class="filter-pill" id="cmMembers">Find Members</button>
   </div>
 
   <!-- ACTIVITY FEED -->
@@ -1625,6 +1644,15 @@ header::before{
       <span class="section-count" id="cotmMonthLabel"></span>
     </div>
     <div id="cotmContent"></div>
+  </div>
+
+  <!-- FIND MEMBERS -->
+  <div id="cm-members" style="display:none">
+    <div class="panel">
+      <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Find Members</span></div>
+      <input class="form-input" id="memberSearchInput" type="text" placeholder="Search by name…" autocomplete="off" style="margin-bottom:16px;">
+      <div id="memberSearchResults"><div style="color:var(--text-muted);font-style:italic;font-size:0.85rem;">Start typing to find members.</div></div>
+    </div>
   </div>
 
 </div>
@@ -1869,6 +1897,7 @@ header::before{
   <button class="mobile-menu-item" onclick="mobileMenuNav('stats')"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Stats</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('social')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('community')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Community</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </div>
 
 <script>
@@ -1904,7 +1933,6 @@ async function bootApp(u){
   buildHoles();
   await loadRounds();
   renderAll();
-  loadProfile();
   initPhase8();
 }
 
@@ -1935,6 +1963,7 @@ document.addEventListener('click',function(e){
   if(id==='navStats'){showSection('stats',e.target);return;}
   if(id==='navSocial'){showSection('social',e.target);return;}
   if(id==='navCommunity'){showSection('community',e.target);return;}
+  if(id==='navProfile'){showSection('profile',e.target);return;}
   // Account settings
   if(id==='saveDisplayNameBtn'){saveDisplayName();return;}
   if(id==='changePasswordBtn'){changePassword();return;}
@@ -1944,7 +1973,7 @@ document.addEventListener('click',function(e){
   // Social sub-tabs
   if(id==='stSocieties'||id==='stMatchPlay'||id==='stMonthly'||id==='stSharecard'){showSocialTab(id);return;}
   // Community sub-tabs
-  if(id==='cmFeed'||id==='cmChallenges'||id==='cmTournaments'||id==='cmCourseOfMonth'){showCommunityTab(id);return;}
+  if(id==='cmFeed'||id==='cmChallenges'||id==='cmTournaments'||id==='cmCourseOfMonth'||id==='cmMembers'){showCommunityTab(id);return;}
   if(id==='refreshFeedBtn'){loadFeed();return;}
   if(id==='issueChallengeBtn'){issueChallenge();return;}
   if(id==='clearChallengeOpponent'){clearChallengeOpponent();return;}
@@ -2689,6 +2718,9 @@ async function loadProfile(){
   var pr=await sb.from('profiles').select('*').eq('id',currentUser.id).single();
   if(!pr.error&&pr.data) profileData=pr.data;
   else profileData={id:currentUser.id,is_public:false,home_course_name:null,home_course_id:null};
+  // Avatar
+  setAvatar(profileData.avatar_url||null);
+  initAvatarUpload();
   // Set toggle
   updateToggleUI(profileData.is_public);
   // Share URL
@@ -3387,7 +3419,7 @@ function closeMobileMenu(){
 
 function mobileMenuNav(section){
   closeMobileMenu();
-  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',community:'navCommunity'};
+  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',community:'navCommunity',profile:'navProfile'};
   showSection(section,document.getElementById(desktopMap[section]));
   var bottomMap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile'};
   document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
@@ -3479,8 +3511,8 @@ function exportStatsPDF(){
 var challengeOpponent_=null, challengeCourse_=null, currentTourney_=null, memberSearchTimer=null, challengeCourseTimer=null;
 
 function showCommunityTab(tabId){
-  var tabs=['cmFeed','cmChallenges','cmTournaments','cmCourseOfMonth'];
-  var panels={cmFeed:'cm-feed',cmChallenges:'cm-challenges',cmTournaments:'cm-tournaments',cmCourseOfMonth:'cm-courseofmonth'};
+  var tabs=['cmFeed','cmChallenges','cmTournaments','cmCourseOfMonth','cmMembers'];
+  var panels={cmFeed:'cm-feed',cmChallenges:'cm-challenges',cmTournaments:'cm-tournaments',cmCourseOfMonth:'cm-courseofmonth',cmMembers:'cm-members'};
   tabs.forEach(function(t){
     document.getElementById(t).classList.toggle('active',t===tabId);
     document.getElementById(panels[t]).style.display=t===tabId?'':'none';
@@ -3489,6 +3521,7 @@ function showCommunityTab(tabId){
   if(tabId==='cmChallenges') loadChallenges();
   if(tabId==='cmTournaments') loadTournaments();
   if(tabId==='cmCourseOfMonth') loadCourseOfMonth();
+  if(tabId==='cmMembers') initMemberSearch();
 }
 
 async function loadCommunity(){
@@ -4033,7 +4066,7 @@ async function deleteAccount(){
 
 // ── NAV & UTILS ───────────────────────────────────────────────────────────
 function showSection(s,btn){
-  ['dashboard','courses','leaderboard','stats','social','community'].forEach(function(x){
+  ['dashboard','courses','leaderboard','stats','social','community','profile'].forEach(function(x){
     document.getElementById('section-'+x).style.display=x===s?'':'none';
   });
   document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active');});
@@ -4043,7 +4076,107 @@ function showSection(s,btn){
   if(s==='stats'){ loadRounds().then(function(){ renderStats(); }); }
   if(s==='social') loadSocial();
   if(s==='community') loadCommunity();
-  // No bottom nav to sync on mobile — header hamburger used
+  if(s==='profile') loadProfile();
+}
+
+// ── AVATAR ────────────────────────────────────────────────────────────────
+function initAvatarUpload(){
+  var input=document.getElementById('avatarUpload');
+  if(!input||input._bound) return;
+  input._bound=true;
+  input.addEventListener('change',async function(){
+    var file=this.files[0];
+    if(!file) return;
+    if(file.size>2*1024*1024){toast('Image must be under 2MB.');return;}
+    var ext=file.name.split('.').pop();
+    var path=currentUser.id+'/avatar.'+ext;
+    var btn=document.getElementById('avatarDisplay');
+    btn.style.opacity='0.5';
+    var r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});
+    btn.style.opacity='1';
+    if(r.error){toast('Upload failed: '+r.error.message);return;}
+    var pub=sb.storage.from('avatars').getPublicUrl(path);
+    var url=pub.data.publicUrl+'?t='+Date.now();
+    await sb.from('profiles').upsert({id:currentUser.id,avatar_url:url,display_name:(currentUser.user_metadata&&currentUser.user_metadata.display_name)||currentUser.email.split('@')[0]});
+    setAvatar(url);
+    toast('Profile photo updated ✓');
+  });
+}
+
+function setAvatar(url){
+  var img=document.getElementById('avatarImg');
+  var initial=document.getElementById('avatarInitial');
+  if(!img||!initial) return;
+  if(url){
+    img.src=url;
+    img.style.display='block';
+    initial.style.display='none';
+  } else {
+    img.style.display='none';
+    initial.style.display='block';
+    var name=(currentUser&&currentUser.user_metadata&&currentUser.user_metadata.display_name)||
+      (currentUser?currentUser.email.split('@')[0]:'?');
+    initial.textContent=name.charAt(0).toUpperCase();
+  }
+  // Also update header pill avatar if present
+  var pill=document.getElementById('avatarPillImg');
+  if(pill){ pill.src=url||''; pill.style.display=url?'inline-block':'none'; }
+}
+
+// ── MEMBER SEARCH ────────────────────────────────────────────────────────
+var memberSearchDebounce=null;
+
+function initMemberSearch(){
+  var input=document.getElementById('memberSearchInput');
+  if(!input||input._bound) return;
+  input._bound=true;
+  input.addEventListener('input',function(){
+    clearTimeout(memberSearchDebounce);
+    var q=this.value.trim();
+    if(!q){
+      document.getElementById('memberSearchResults').innerHTML='<div style="color:var(--text-muted);font-style:italic;font-size:0.85rem;">Start typing to find members.</div>';
+      return;
+    }
+    memberSearchDebounce=setTimeout(function(){runMemberSearch(q);},300);
+  });
+}
+
+async function runMemberSearch(q){
+  var el=document.getElementById('memberSearchResults');
+  el.innerHTML='<div style="color:var(--text-muted);font-style:italic;font-size:0.85rem;">Searching…</div>';
+  var r=await sb.from('profiles').select('id,display_name,avatar_url,home_course_name,is_public').ilike('display_name','*'+q+'*').limit(20);
+  if(r.error||!r.data||!r.data.length){
+    el.innerHTML='<div style="color:var(--text-muted);font-style:italic;font-size:0.85rem;">No members found.</div>';
+    return;
+  }
+  // Get handicaps — fetch rounds for matched users
+  var uids=r.data.map(function(p){return p.id;});
+  var rr=await sb.from('rounds').select('user_id,diff').in('user_id',uids);
+  var roundMap={};
+  (rr.data||[]).forEach(function(x){
+    if(!roundMap[x.user_id]) roundMap[x.user_id]=[];
+    roundMap[x.user_id].push(x);
+  });
+  el.innerHTML=r.data.map(function(p){
+    var isYou=p.id===currentUser.id;
+    var hcp=calcHcp(roundMap[p.id]||[]);
+    var hcpStr=hcp!==null?(hcp<=0?'+'+Math.abs(hcp):hcp.toFixed(1)):'—';
+    var initials=(p.display_name||'?').charAt(0).toUpperCase();
+    var avatarHtml=p.avatar_url
+      ? '<img src="'+p.avatar_url+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex-shrink:0;">'
+      : '<div style="width:40px;height:40px;border-radius:50%;background:var(--augusta);display:flex;align-items:center;justify-content:center;font-family:\'Cormorant Garamond\',serif;font-size:1.2rem;font-weight:700;color:white;flex-shrink:0;border:2px solid var(--gold);">'+initials+'</div>';
+    return '<div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);">'+
+      avatarHtml+
+      '<div style="flex:1;">'+
+        '<div style="font-weight:600;color:var(--augusta-deep);font-size:0.9rem;">'+p.display_name+(isYou?' <span style="font-size:0.65rem;color:var(--gold);font-family:\'Barlow Condensed\',sans-serif;font-weight:600;letter-spacing:0.1em;">(you)</span>':'')+'</div>'+
+        (p.home_course_name?'<div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">🏠 '+p.home_course_name+'</div>':'')+
+      '</div>'+
+      '<div style="text-align:right;">'+
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+hcpStr+'</div>'+
+        '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.55rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);">Handicap</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
 }
 
 function fDate(s){
