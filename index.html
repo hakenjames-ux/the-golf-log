@@ -251,6 +251,16 @@ header::before{
   border-radius:var(--radius);transition:all 0.2s;
 }
 .sign-out-btn:hover{border-color:var(--gold);color:var(--gold);}
+.gs-trigger{display:flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:7px 14px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.55);background:rgba(255,255,255,0.06);cursor:pointer;border-radius:var(--radius);transition:all 0.2s;}
+.gs-trigger:hover{border-color:rgba(201,168,76,0.5);color:rgba(201,168,76,0.9);background:rgba(201,168,76,0.08);}
+.gs-category{font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);padding:10px 20px 4px;border-top:1px solid var(--border);margin-top:4px;}
+.gs-category:first-child{border-top:none;margin-top:0;}
+.gs-result{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:background 0.1s;}
+.gs-result:hover{background:var(--panel);}
+.gs-result-icon{width:32px;height:32px;border-radius:50%;background:var(--augusta);display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0;}
+.gs-result-name{font-size:0.88rem;font-weight:600;color:var(--augusta-deep);}
+.gs-result-sub{font-size:0.72rem;color:var(--text-muted);margin-top:1px;}
+.gs-result-badge{margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);background:var(--panel);border:1px solid var(--border);border-radius:2px;padding:2px 7px;white-space:nowrap;}
 
 /* NAV */
 .header-nav{
@@ -918,6 +928,10 @@ header::before{
         </div>
       </div>
       <div class="header-user">
+        <button class="gs-trigger" id="globalSearchBtn" title="Search (/)">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Search
+        </button>
         <span class="user-name" id="userPill">—</span>
         <button class="sign-out-btn" id="signOutBtn">Sign Out</button>
         <button class="mob-menu-toggle" id="headerMenuBtn" onclick="toggleMobileMenu()">
@@ -1876,6 +1890,25 @@ header::before{
     </div>
     <div class="form-group"><label class="form-label">Course Type</label><select class="form-input" id="acType"><option value="parkland">Parkland</option><option value="links">Links</option><option value="heathland">Heathland</option><option value="moorland">Moorland</option><option value="downland">Downland</option></select></div>
     <button class="log-btn" onclick="submitCourse()">Add Course</button>
+  </div>
+</div>
+
+<!-- GLOBAL SEARCH OVERLAY -->
+<div id="globalSearchOverlay" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(10,26,18,0.82);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);">
+  <div style="max-width:640px;margin:80px auto 0;padding:0 16px;">
+    <div style="background:var(--white);border-radius:6px;box-shadow:0 24px 64px rgba(0,0,0,0.4);overflow:hidden;">
+      <!-- Input row -->
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);">
+        <svg viewBox="0 0 24 24" width="18" height="18" stroke="var(--text-muted)" fill="none" stroke-width="2" stroke-linecap="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="globalSearchInput" type="text" placeholder="Search members, courses, tournaments, societies…"
+          style="flex:1;border:none;outline:none;font-family:'Barlow',sans-serif;font-size:1rem;color:var(--augusta-deep);background:transparent;min-width:0;">
+        <kbd style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.1em;color:var(--text-muted);border:1px solid var(--border);border-radius:3px;padding:2px 6px;">ESC</kbd>
+      </div>
+      <!-- Results -->
+      <div id="globalSearchResults" style="max-height:480px;overflow-y:auto;padding:8px 0;">
+        <div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:0.85rem;">Start typing to search across the app…</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -4077,6 +4110,170 @@ function showSection(s,btn){
   if(s==='social') loadSocial();
   if(s==='community') loadCommunity();
   if(s==='profile') loadProfile();
+}
+
+// ── GLOBAL SEARCH ─────────────────────────────────────────────────────────
+var gsDebounce=null;
+
+function openGlobalSearch(){
+  document.getElementById('globalSearchOverlay').style.display='block';
+  setTimeout(function(){document.getElementById('globalSearchInput').focus();},50);
+}
+function closeGlobalSearch(){
+  document.getElementById('globalSearchOverlay').style.display='none';
+  document.getElementById('globalSearchInput').value='';
+  document.getElementById('globalSearchResults').innerHTML='<div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:0.85rem;">Start typing to search across the app…</div>';
+}
+
+document.addEventListener('click',function(e){
+  if(e.target.id==='globalSearchBtn'||e.target.closest('#globalSearchBtn')){openGlobalSearch();return;}
+  if(e.target.id==='globalSearchOverlay'){closeGlobalSearch();return;}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){
+    e.preventDefault();openGlobalSearch();return;
+  }
+  if(e.key==='Escape'){closeGlobalSearch();}
+});
+document.addEventListener('input',function(e){
+  if(e.target.id!=='globalSearchInput') return;
+  var q=e.target.value.trim();
+  clearTimeout(gsDebounce);
+  if(!q){
+    document.getElementById('globalSearchResults').innerHTML='<div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:0.85rem;">Start typing to search across the app…</div>';
+    return;
+  }
+  document.getElementById('globalSearchResults').innerHTML='<div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:0.85rem;">Searching…</div>';
+  gsDebounce=setTimeout(function(){runGlobalSearch(q);},280);
+});
+
+async function runGlobalSearch(q){
+  var ql=q.toLowerCase();
+  var el=document.getElementById('globalSearchResults');
+
+  // Fire all 4 queries in parallel
+  var results=await Promise.allSettled([
+    sb.from('profiles').select('id,display_name,avatar_url,home_course_name').ilike('display_name','*'+ql+'*').limit(5),
+    sb.from('courses').select('id,name,location,county,holes,par').or('name.ilike.*'+ql+'*,location.ilike.*'+ql+'*,county.ilike.*'+ql+'*').limit(5),
+    sb.from('tournaments').select('id,name,format,start_date,end_date').ilike('name','*'+ql+'*').order('start_date',{ascending:false}).limit(4),
+    sb.from('societies').select('id,name,invite_code').ilike('name','*'+ql+'*').limit(4)
+  ]);
+
+  var members=(results[0].status==='fulfilled'&&!results[0].value.error)?results[0].value.data||[]:[];
+  var courses=(results[1].status==='fulfilled'&&!results[1].value.error)?results[1].value.data||[]:[];
+  var tourneys=(results[2].status==='fulfilled'&&!results[2].value.error)?results[2].value.data||[]:[];
+  var societies=(results[3].status==='fulfilled'&&!results[3].value.error)?results[3].value.data||[]:[];
+
+  var total=members.length+courses.length+tourneys.length+societies.length;
+  if(!total){
+    el.innerHTML='<div style="padding:32px;text-align:center;color:var(--text-muted);font-style:italic;font-size:0.88rem;">No results for "'+q+'"</div>';
+    return;
+  }
+
+  var html='';
+
+  if(members.length){
+    html+='<div class="gs-category">Members</div>';
+    html+=members.map(function(p){
+      var isYou=p.id===currentUser.id;
+      var init=(p.display_name||'?').charAt(0).toUpperCase();
+      var avatarHtml=p.avatar_url
+        ?'<img src="'+p.avatar_url+'" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display=\'none\'">'
+        :'<div class="gs-result-icon" style="font-family:\'Cormorant Garamond\',serif;font-size:1rem;font-weight:700;color:white;">'+init+'</div>';
+      return '<div class="gs-result" data-type="member" data-id="'+p.id+'" data-name="'+encodeURIComponent(p.display_name||'')+'">'+
+        avatarHtml+
+        '<div><div class="gs-result-name">'+p.display_name+(isYou?' <span style="font-size:0.65rem;color:var(--gold);">(you)</span>':'')+'</div>'+
+        (p.home_course_name?'<div class="gs-result-sub">🏠 '+p.home_course_name+'</div>':'')+
+        '</div><span class="gs-result-badge">Member</span></div>';
+    }).join('');
+  }
+
+  if(courses.length){
+    html+='<div class="gs-category">Courses</div>';
+    html+=courses.map(function(c){
+      return '<div class="gs-result" data-type="course" data-name="'+encodeURIComponent(c.name)+'">'+
+        '<div class="gs-result-icon">⛳</div>'+
+        '<div><div class="gs-result-name">'+c.name+'</div>'+
+        '<div class="gs-result-sub">'+c.location+(c.county?', '+c.county:'')+' · Par '+c.par+' · '+c.holes+'H</div></div>'+
+        '<span class="gs-result-badge">Course</span></div>';
+    }).join('');
+  }
+
+  if(tourneys.length){
+    html+='<div class="gs-category">Tournaments</div>';
+    html+=tourneys.map(function(t){
+      var active=new Date(t.end_date)>=new Date();
+      return '<div class="gs-result" data-type="tournament" data-id="'+t.id+'" data-name="'+encodeURIComponent(t.name)+'" data-format="'+t.format+'" data-dates="'+fDate(t.start_date)+' – '+fDate(t.end_date)+'">'+
+        '<div class="gs-result-icon">🏆</div>'+
+        '<div><div class="gs-result-name">'+t.name+'</div>'+
+        '<div class="gs-result-sub">'+fDate(t.start_date)+' – '+fDate(t.end_date)+' · '+t.format+'</div></div>'+
+        '<span class="gs-result-badge" style="'+(active?'color:var(--under);border-color:var(--under);':'')+'">'+( active?'Active':'Ended')+'</span></div>';
+    }).join('');
+  }
+
+  if(societies.length){
+    html+='<div class="gs-category">Societies</div>';
+    html+=societies.map(function(s){
+      var isMember=societies.some&&false; // evaluated per-result below
+      return '<div class="gs-result" data-type="society" data-id="'+s.id+'" data-name="'+encodeURIComponent(s.name)+'" data-code="'+s.invite_code+'">'+
+        '<div class="gs-result-icon">👥</div>'+
+        '<div><div class="gs-result-name">'+s.name+'</div>'+
+        '<div class="gs-result-sub">Code: '+s.invite_code+'</div></div>'+
+        '<span class="gs-result-badge">Society</span></div>';
+    }).join('');
+  }
+
+  el.innerHTML=html;
+
+  // Attach click handlers to results
+  el.querySelectorAll('.gs-result').forEach(function(row){
+    row.addEventListener('click',function(){
+      var type=this.dataset.type;
+      closeGlobalSearch();
+      if(type==='member'){
+        // Go to Community → Find Members and pre-fill search
+        showSection('community',document.getElementById('navCommunity'));
+        setTimeout(function(){
+          showCommunityTab('cmMembers');
+          var inp=document.getElementById('memberSearchInput');
+          if(inp){ inp.value=decodeURIComponent(row.dataset.name); inp.dispatchEvent(new Event('input')); }
+        },100);
+      } else if(type==='course'){
+        // Go to Courses and pre-fill search
+        showSection('courses',document.getElementById('navCourses'));
+        setTimeout(function(){
+          var inp=document.getElementById('courseBrowserSearch');
+          if(inp){ inp.value=decodeURIComponent(row.dataset.name); inp.dispatchEvent(new Event('input')); }
+        },100);
+      } else if(type==='tournament'){
+        // Go to Community → Tournaments and open the tourney
+        showSection('community',document.getElementById('navCommunity'));
+        setTimeout(function(){
+          showCommunityTab('cmTournaments');
+          setTimeout(function(){
+            openTourney(row.dataset.id,decodeURIComponent(row.dataset.name),row.dataset.dates,row.dataset.format);
+          },300);
+        },100);
+      } else if(type==='society'){
+        // Go to Social → Societies
+        showSection('social',document.getElementById('navSocial'));
+        setTimeout(function(){
+          showSocialTab('stSocieties');
+          // If user is a member, open it; otherwise highlight join form
+          var match=societies.find(function(s){return s.id===row.dataset.id;}) ||
+            {id:row.dataset.id,name:decodeURIComponent(row.dataset.name),invite_code:row.dataset.code};
+          var memberSociety=(window.societies||[]).find(function(s){return s&&s.id===row.dataset.id;});
+          if(memberSociety){
+            openSociety(row.dataset.id,decodeURIComponent(row.dataset.name),row.dataset.code);
+          } else {
+            var joinInput=document.getElementById('joinCodeInput');
+            if(joinInput){ joinInput.value=row.dataset.code; joinInput.focus(); }
+            toast('Enter code '+row.dataset.code+' to join "'+decodeURIComponent(row.dataset.name)+'"');
+          }
+        },300);
+      }
+    });
+  });
 }
 
 // ── AVATAR ────────────────────────────────────────────────────────────────
