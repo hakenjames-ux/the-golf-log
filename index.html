@@ -598,6 +598,19 @@ header::before{
 .profile-sidenav-item.danger-item{color:var(--danger);}
 .profile-sidenav-item.danger-item:hover{background:#fff5f5;}
 .profile-sidenav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.cal-day{min-height:56px;border-radius:3px;padding:4px;position:relative;cursor:default;transition:background 0.12s;}
+.cal-day.other-month{opacity:0.3;}
+.cal-day.today{outline:2px solid var(--gold);outline-offset:-2px;}
+.cal-day.has-round{background:#edf5ee;cursor:pointer;}
+.cal-day.has-round:hover{background:#daeede;}
+.cal-day.has-round.selected{background:var(--augusta);outline:2px solid var(--gold);outline-offset:-2px;}
+.cal-day-num{font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;color:var(--text-muted);line-height:1;}
+.cal-day.has-round .cal-day-num{color:var(--augusta-deep);font-weight:700;}
+.cal-day.has-round.selected .cal-day-num{color:white;}
+.cal-round-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:4px;}
+.cal-round-mini{font-family:'Barlow Condensed',sans-serif;font-size:0.58rem;font-weight:600;color:var(--augusta);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
+.cal-day.has-round.selected .cal-round-mini{color:rgba(255,255,255,0.8);}
+.cal-day.has-round.selected .cal-round-dot{background:var(--gold);}
 .profile-body>div{display:none;}
 .profile-body>div.active{display:block;}
 /* Menu toggle button — hidden on desktop */
@@ -1170,32 +1183,6 @@ header::before{
       </div>
     </div>
 
-    <!-- TOOLS ROW -->
-    <div style="margin-bottom:24px;">
-
-      <!-- TEE TIME REMINDER - full width -->
-      <div class="panel">
-        <div class="section-head" style="margin-bottom:16px;">
-          <span class="section-label">⏰ Tee Time Reminder</span>
-          <span id="notifStatus" style="font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);"></span>
-        </div>
-        <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:flex-end;">
-          <div class="form-group" style="margin:0;"><label class="form-label">Course</label><input class="form-input" id="reminderCourse" type="text" placeholder="e.g. St Andrews"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Tee Time</label><input class="form-input" id="reminderTime" type="datetime-local"></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Remind me before</label>
-            <select class="form-input" id="reminderBefore">
-              <option value="30">30 minutes</option>
-              <option value="60" selected>1 hour</option>
-              <option value="120">2 hours</option>
-              <option value="1440">1 day</option>
-            </select>
-          </div>
-          <button class="log-btn" id="setReminderBtn" style="margin:0;white-space:nowrap;">Set Reminder</button>
-        </div>
-        <div id="activeReminders" style="margin-top:14px;"></div>
-      </div>
-    </div>
-
   </div><!-- /section-dashboard -->
 
   <!-- PROFILE -->
@@ -1252,6 +1239,10 @@ header::before{
       <button class="profile-sidenav-item" onclick="showProfileSection('ps-account',this)">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
         Account Settings
+      </button>
+      <button class="profile-sidenav-item" onclick="showProfileSection('ps-calendar',this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Round Calendar
       </button>
       <button class="profile-sidenav-item" onclick="showProfileSection('ps-export',this)">
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1368,6 +1359,33 @@ header::before{
             <input class="form-input" id="confirmPassword" type="password" placeholder="Repeat new password">
           </div>
           <button class="log-btn" id="changePasswordBtn">Change Password</button>
+        </div>
+      </div>
+
+      <!-- ROUND CALENDAR -->
+      <div id="ps-calendar">
+        <div class="panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <button id="calPrev" style="background:none;border:1px solid var(--border);border-radius:var(--radius);width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;">‹</button>
+            <div id="calMonthLabel" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--augusta-deep);"></div>
+            <button id="calNext" style="background:none;border:1px solid var(--border);border-radius:var(--radius);width:32px;height:32px;cursor:pointer;font-size:1rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;">›</button>
+          </div>
+          <!-- Day-of-week headers -->
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;">
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Mon</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Tue</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Wed</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Thu</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Fri</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Sat</div>
+            <div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);padding:4px 0;">Sun</div>
+          </div>
+          <!-- Calendar grid -->
+          <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;"></div>
+          <!-- Selected day detail -->
+          <div id="calDayDetail" style="display:none;margin-top:16px;padding:14px 16px;background:var(--panel);border-radius:var(--radius);border-left:3px solid var(--gold);"></div>
+          <!-- Month summary -->
+          <div id="calSummary" style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;"></div>
         </div>
       </div>
 
@@ -2677,6 +2695,141 @@ function renderParBreakdown(){
   }).join('');
 }
 
+// ── ROUND CALENDAR ───────────────────────────────────────────────────────
+var calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+
+function initCalendar(){
+  // Attach prev/next buttons once
+  var prev=document.getElementById('calPrev');
+  var next=document.getElementById('calNext');
+  if(prev&&!prev._bound){
+    prev._bound=true;
+    prev.addEventListener('click',function(){
+      calMonth--;
+      if(calMonth<0){calMonth=11;calYear--;}
+      renderCalendar();
+    });
+  }
+  if(next&&!next._bound){
+    next._bound=true;
+    next.addEventListener('click',function(){
+      calMonth++;
+      if(calMonth>11){calMonth=0;calYear++;}
+      renderCalendar();
+    });
+  }
+  renderCalendar();
+}
+
+function renderCalendar(){
+  var grid=document.getElementById('calGrid');
+  var label=document.getElementById('calMonthLabel');
+  var detail=document.getElementById('calDayDetail');
+  var summary=document.getElementById('calSummary');
+  if(!grid) return;
+
+  var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  label.textContent=monthNames[calMonth]+' '+calYear;
+  detail.style.display='none';
+
+  // Build a map: "YYYY-MM-DD" → [rounds]
+  var roundMap={};
+  rounds.forEach(function(r){
+    var key=r.date.slice(0,10);
+    if(!roundMap[key]) roundMap[key]=[];
+    roundMap[key].push(r);
+  });
+
+  // First day of month (Monday=0 based)
+  var first=new Date(calYear,calMonth,1);
+  var startDow=first.getDay(); // 0=Sun
+  // Convert to Mon-start: Mon=0 … Sun=6
+  var offset=(startDow+6)%7;
+  var daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  var today=new Date();
+  var todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+
+  var cells='';
+  // Leading empty cells from previous month
+  var prevDays=new Date(calYear,calMonth,0).getDate();
+  for(var i=0;i<offset;i++){
+    var d=prevDays-offset+1+i;
+    cells+='<div class="cal-day other-month"><div class="cal-day-num">'+d+'</div></div>';
+  }
+  // Days of this month
+  for(var d=1;d<=daysInMonth;d++){
+    var key=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var dayRounds=roundMap[key]||[];
+    var hasRound=dayRounds.length>0;
+    var isToday=key===todayKey;
+    var cls='cal-day'+(hasRound?' has-round':'')+(isToday?' today':'');
+    var inner='<div class="cal-day-num">'+d+'</div>';
+    if(hasRound){
+      inner+='<div class="cal-round-dot"></div>';
+      inner+='<div class="cal-round-mini">'+dayRounds[0].course+(dayRounds.length>1?' +'+( dayRounds.length-1):'')+'</div>';
+    }
+    cells+='<div class="'+cls+'" data-key="'+key+'" data-date="'+d+'">'+inner+'</div>';
+  }
+  // Trailing cells to complete last row
+  var total=offset+daysInMonth;
+  var trailing=(7-total%7)%7;
+  for(var t=1;t<=trailing;t++){
+    cells+='<div class="cal-day other-month"><div class="cal-day-num">'+t+'</div></div>';
+  }
+  grid.innerHTML=cells;
+
+  // Click handler for days with rounds
+  grid.querySelectorAll('.cal-day.has-round').forEach(function(cell){
+    cell.addEventListener('click',function(){
+      grid.querySelectorAll('.cal-day').forEach(function(c){c.classList.remove('selected');});
+      this.classList.add('selected');
+      var key=this.dataset.key;
+      var dayRounds=roundMap[key]||[];
+      var parts=key.split('-');
+      var dateStr=parseInt(parts[2])+'/'+parseInt(parts[1])+'/'+parts[0];
+      detail.style.display='block';
+      detail.innerHTML=dayRounds.map(function(r){
+        var ov=r.score-r.par, ovS=ov===0?'E':(ov>0?'+'+ov:''+ov);
+        var cls=ov<0?'var(--under)':ov>0?'var(--over)':'var(--gold)';
+        return '<div style="display:flex;align-items:center;gap:12px;'+(dayRounds.length>1?'padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;':'')+'">'+
+          '<div style="font-size:1.5rem;">⛳</div>'+
+          '<div style="flex:1;">'+
+            '<div style="font-weight:700;color:var(--augusta-deep);font-size:0.9rem;">'+r.course+'</div>'+
+            '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">'+dateStr+' · '+r.holes_played+'H · Par '+r.par+'</div>'+
+          '</div>'+
+          '<div style="text-align:right;">'+
+            '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.6rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+r.score+'</div>'+
+            '<div style="font-size:0.72rem;font-weight:700;color:'+cls+';">'+ovS+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    });
+  });
+
+  // Month summary bar
+  var monthRounds=rounds.filter(function(r){
+    var d=new Date(r.date+'T12:00:00');
+    return d.getFullYear()===calYear&&d.getMonth()===calMonth;
+  });
+  if(monthRounds.length){
+    var best=monthRounds.reduce(function(a,b){return a.score<b.score?a:b;});
+    var avgS=Math.round(monthRounds.reduce(function(a,r){return a+r.score;},0)/monthRounds.length);
+    summary.innerHTML=[
+      {val:monthRounds.length,lbl:'Rounds'},
+      {val:best.score,lbl:'Best Score'},
+      {val:avgS,lbl:'Avg Score'},
+      {val:parseFloat(Math.min.apply(null,monthRounds.map(function(r){return r.diff;}))).toFixed(1),lbl:'Best Diff'}
+    ].map(function(s){
+      return '<div style="flex:1;min-width:80px;background:var(--panel);border-radius:var(--radius);padding:10px 12px;text-align:center;">'+
+        '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:700;color:var(--augusta-deep);">'+s.val+'</div>'+
+        '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.58rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:2px;">'+s.lbl+'</div>'+
+      '</div>';
+    }).join('');
+  } else {
+    summary.innerHTML='<div style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">No rounds logged in '+monthNames[calMonth]+'.</div>';
+  }
+}
+
 function setStatChart(type,btn){
   currentStatChart=type;
   document.querySelectorAll('#statChartPutts,#statChartFairways,#statChartGIR,#statChartPenalties').forEach(function(b){b.classList.remove('active');});
@@ -2725,6 +2878,7 @@ function showProfileSection(id,btn){
   var el=document.getElementById(id);
   if(el) el.classList.add('active');
   if(btn) btn.classList.add('active');
+  if(id==='ps-calendar') initCalendar();
 }
 
 // ── PROFILE ───────────────────────────────────────────────────────────────
