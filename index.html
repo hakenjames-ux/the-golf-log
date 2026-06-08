@@ -1120,6 +1120,14 @@ header::before{
         <div id="achievementsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;"></div>
       </div>
 
+      <div class="panel" style="margin-bottom:24px;">
+        <div class="section-head" style="margin-bottom:16px;">
+          <span class="section-label">My Course Photos</span>
+          <span class="section-count" id="myPhotoCount">0</span>
+        </div>
+        <div id="myPhotosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;"></div>
+      </div>
+
       <!-- ROUND CALENDAR (now on the main profile page) -->
       <div class="panel">
         <div class="section-head" style="margin-bottom:20px;"><span class="section-label">Round Calendar</span></div>
@@ -1597,6 +1605,14 @@ header::before{
       <textarea class="form-input" id="reviewComment" rows="3" placeholder="Tell other golfers about your experience…" style="resize:vertical;"></textarea>
     </div>
 
+    <!-- Course photos -->
+    <div class="form-group">
+      <label class="form-label">Course Photos</label>
+      <div id="coursePhotoGallery" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;"></div>
+      <input type="file" id="coursePhotoInput" accept="image/*" style="display:none;">
+      <button type="button" class="log-btn" id="addCoursePhotoBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">Add a Photo</button>
+    </div>
+
     <!-- Existing reviews -->
     <div id="existingReviews" style="margin-top:18px;max-height:220px;overflow-y:auto;"></div>
 
@@ -1982,6 +1998,7 @@ document.addEventListener('click',function(e){
   if(rrow&&rrow.dataset.id){openRoundModal(rrow.dataset.id);return;}
   if(id==='closeRoundDetailBtn'||id==='roundDetailModal'){closeRoundModal();return;}
   if(id==='rdDeleteBtn'){confirmDeleteCurrentRound();return;}
+  if(id==='addCoursePhotoBtn'){document.getElementById('coursePhotoInput').click();return;}
   // Delete round (legacy inline buttons, if any remain)
   var del=e.target.closest('.row-del');
   if(del&&del.dataset.id){deleteRound(del.dataset.id);return;}
@@ -2298,6 +2315,13 @@ async function renderCoursesBrowser(){
       if(rv.difficulty){revMap[rv.course_id].diffSum+=rv.difficulty;revMap[rv.course_id].diffCount++;}
     });
 
+    // Fetch one photo per visible course for the card banner
+    var photoMap={};
+    try{
+      var photoR=await sb.from('course_photos').select('course_id,url').in('course_id',ids);
+      (photoR.data||[]).forEach(function(p){ if(!photoMap[p.course_id]) photoMap[p.course_id]=p.url; });
+    }catch(e){}
+
     // Played courses for this user
     var playedIds={};
     rounds.forEach(function(ro){ playedIds[ro.course]=true; });
@@ -2308,7 +2332,9 @@ async function renderCoursesBrowser(){
       var avgDiff=rv&&rv.diffCount?Math.round(rv.diffSum/rv.diffCount*10)/10:null;
       var played=rounds.some(function(ro){return ro.course===c.name;});
       var stars=avgRating?'★'.repeat(Math.round(avgRating))+'☆'.repeat(5-Math.round(avgRating)):'☆☆☆☆☆';
+      var photoUrl=photoMap[c.id];
       return '<div class="course-card">'+
+        (photoUrl?'<div style="margin:-20px -22px 14px;height:130px;overflow:hidden;"><img src="'+photoUrl+'" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentNode.style.display=\'none\'"></div>':'')+
         '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:2px;">'+
           '<div class="cc-name">'+c.name+'</div>'+
           (played?'<span class="cc-played-badge">✓ Played</span>':'')+
@@ -3013,9 +3039,10 @@ async function loadProfile(){
   var fr=await sb.from('favourites').select('*').eq('user_id',currentUser.id).order('created_at');
   if(!fr.error&&fr.data) favourites=fr.data;
   renderFavourites();
-  // Achievements & calendar
+  // Achievements, photos & calendar
   if(!rounds.length) await loadRounds();
   renderAchievements();
+  loadMyPhotos();
   initCalendar();
 }
 
@@ -3500,6 +3527,7 @@ function downloadScorecard(){
 // ── PHASE 4: REVIEWS & WEATHER ────────────────────────────────────────────
 var starRatings={overall:0,condition:0,value:0,difficulty:0};
 var currentReviewCourseId=null;
+var currentReviewCourseName=null;
 
 function buildStarRows(){
   ['overall','condition','value','difficulty'].forEach(function(field){
@@ -3530,12 +3558,15 @@ function resetStars(){
 
 async function openReviewModal(courseId,courseName,loc,county){
   currentReviewCourseId=courseId;
+  currentReviewCourseName=courseName;
   document.getElementById('reviewCourseId').value=courseId;
   document.getElementById('reviewModalTitle').textContent=courseName;
-  document.getElementById('reviewModalSub').textContent='📍 '+loc+(county?', '+county:'');
+  document.getElementById('reviewModalSub').textContent=loc+(county?', '+county:'');
   document.getElementById('reviewComment').value='';
   resetStars();
   buildStarRows();
+  initCoursePhotoInput();
+  loadCoursePhotos(courseId);
   document.getElementById('reviewModal').style.display='flex';
   // Load existing reviews
   var r=await sb.from('course_reviews').select('*').eq('course_id',courseId).order('created_at',{ascending:false});
@@ -3572,6 +3603,62 @@ async function openReviewModal(courseId,courseName,loc,county){
 function closeReviewModal(){
   document.getElementById('reviewModal').style.display='none';
   currentReviewCourseId=null;
+}
+
+// ── COURSE PHOTOS ─────────────────────────────────────────────────────────
+function initCoursePhotoInput(){
+  var input=document.getElementById('coursePhotoInput');
+  if(!input||input._bound) return;
+  input._bound=true;
+  input.addEventListener('change',function(){
+    var file=this.files[0];
+    if(file) uploadCoursePhoto(file);
+    this.value='';
+  });
+}
+
+async function loadCoursePhotos(courseId){
+  var el=document.getElementById('coursePhotoGallery');
+  if(!el) return;
+  el.innerHTML='<div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;">Loading…</div>';
+  var r=await sb.from('course_photos').select('*').eq('course_id',courseId).order('created_at',{ascending:false});
+  var photos=(r.data)||[];
+  if(!photos.length){ el.innerHTML='<div style="font-size:0.78rem;color:var(--text-muted);font-style:italic;">No photos yet — be the first to add one.</div>'; return; }
+  el.innerHTML=photos.map(function(p){
+    return '<a href="'+p.url+'" target="_blank" title="'+(p.display_name||'')+'" style="display:block;"><img src="'+p.url+'" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--border);"></a>';
+  }).join('');
+}
+
+async function uploadCoursePhoto(file){
+  if(!currentReviewCourseId) return;
+  if(file.size>5*1024*1024){toast('Image must be under 5MB.');return;}
+  if(!/^image\//.test(file.type)){toast('Please choose an image file.');return;}
+  var ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  var path=currentReviewCourseId+'/'+currentUser.id+'-'+Date.now()+'.'+ext;
+  toast('Uploading photo…');
+  var up=await sb.storage.from('course-photos').upload(path,file,{contentType:file.type});
+  if(up.error){toast('Upload failed: '+up.error.message);return;}
+  var pub=sb.storage.from('course-photos').getPublicUrl(path);
+  var dname=(currentUser.user_metadata&&currentUser.user_metadata.display_name)||currentUser.email.split('@')[0];
+  var ins=await sb.from('course_photos').insert({course_id:currentReviewCourseId,course_name:currentReviewCourseName,user_id:currentUser.id,display_name:dname,url:pub.data.publicUrl});
+  if(ins.error){toast('Error saving photo: '+ins.error.message);return;}
+  toast('Photo added ✓');
+  loadCoursePhotos(currentReviewCourseId);
+}
+
+async function loadMyPhotos(){
+  var grid=document.getElementById('myPhotosGrid');
+  if(!grid) return;
+  var r=await sb.from('course_photos').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+  var photos=(r.data)||[];
+  var cnt=document.getElementById('myPhotoCount'); if(cnt) cnt.textContent=photos.length;
+  if(!photos.length){ grid.innerHTML='<div style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">No photos yet. Add some from a course’s Review window.</div>'; return; }
+  grid.innerHTML=photos.map(function(p){
+    return '<a href="'+p.url+'" target="_blank" style="display:block;">'+
+      '<img src="'+p.url+'" style="width:100%;height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">'+
+      '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(p.course_name||'')+'</div>'+
+    '</a>';
+  }).join('');
 }
 
 async function submitReview(){
