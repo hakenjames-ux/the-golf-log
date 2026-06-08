@@ -268,6 +268,13 @@ header::before{
 }
 .nav-item:hover{color:rgba(255,255,255,0.8);}
 .nav-item.active{color:#fff;border-bottom-color:var(--gold);}
+.nav-log{
+  background:var(--augusta);color:var(--ink)!important;border-radius:7px;
+  margin:0 14px;padding:10px 22px;border-bottom:none!important;
+  font-weight:700;letter-spacing:0.12em;align-self:center;transition:background 0.2s,transform 0.1s;
+}
+.nav-log:hover{background:var(--augusta-mid);color:var(--ink)!important;transform:translateY(-1px);}
+.nav-log.active{border-bottom:none!important;}
 
 /* GOLD RULE */
 .gold-rule{height:2px;background:linear-gradient(90deg,var(--gold) 0%,var(--azalea) 40%,var(--gold-light) 60%,var(--gold) 100%);}
@@ -934,10 +941,9 @@ header::before{
       </div>
     </div>
     <div class="header-nav">
-      <button class="nav-item active" id="navDashboard">Dashboard</button>
+      <button class="nav-item active" id="navDashboard">Home</button>
       <button class="nav-item" id="navCourses">Courses</button>
-      <button class="nav-item" id="navLeaderboard">Leaderboard</button>
-      <button class="nav-item" id="navStats">Stats</button>
+      <button class="nav-item nav-log" id="navLog">＋ Log a Round</button>
       <button class="nav-item" id="navSocial">Social</button>
       <button class="nav-item" id="navProfile">Profile</button>
     </div>
@@ -1000,7 +1006,7 @@ header::before{
     <div class="panel chart-panel">
       <div class="section-head">
         <span class="section-label">Score Trend</span>
-        <span class="section-count" id="chartMeta">Last 20 rounds</span>
+        <button class="filter-pill" id="dashStatsBtn">📊 View Full Stats →</button>
       </div>
       <canvas id="trendChart" height="100"></canvas>
     </div>
@@ -1113,6 +1119,7 @@ header::before{
 
       <!-- OVERVIEW -->
       <div id="ps-overview" class="active">
+        <button class="log-btn" id="profileStatsBtn" style="width:100%;margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:8px;">📊 View Full Stats</button>
         <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
           <div class="panel">
             <div class="section-head" style="margin-bottom:16px;"><span class="section-label">Home Course</span></div>
@@ -1280,30 +1287,14 @@ header::before{
     <div class="courses-grid" id="coursesGrid"></div>
   </div>
 
-  <!-- LEADERBOARD -->
-  <div class="container" id="section-leaderboard" style="display:none">
-    <div class="section-head" style="margin-bottom:24px;">
-      <span class="section-label">Global Leaderboard</span>
-      <button class="filter-pill" id="refreshLbBtn">↻ Refresh</button>
-    </div>
-    <div class="lb-wrap">
-      <div class="lb-thead">
-        <div>
-          <div class="lb-thead-title">Handicap Rankings</div>
-          <div class="lb-thead-sub" style="margin-top:4px;">All members · Lower is better</div>
-        </div>
-      </div>
-      <div id="lbBody"><div class="lb-empty">Loading…</div></div>
-    </div>
-  </div>
-
   <!-- HISTORY -->
 
 
 <!-- STATS -->
 <div class="container" id="section-stats" style="display:none">
 
-  <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <button class="filter-pill" id="statsBackBtn">← Back to Home</button>
     <button onclick="exportStatsPDF()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';">🖨 Export Stats</button>
   </div>
 
@@ -1384,9 +1375,27 @@ header::before{
   <div class="courses-bar" style="margin-bottom:28px;">
     <button class="filter-pill active" id="sfFeed">Feed</button>
     <button class="filter-pill" id="sfMembers">Members</button>
+    <button class="filter-pill" id="sfLeaderboard">Leaderboard</button>
     <button class="filter-pill" id="sfSocieties">Societies</button>
     <button class="filter-pill" id="sfCompete">Compete</button>
     <button class="filter-pill" id="sfShare">Share</button>
+  </div>
+
+  <!-- LEADERBOARD -->
+  <div id="sf-leaderboard" style="display:none">
+    <div class="section-head" style="margin-bottom:24px;">
+      <span class="section-label">Global Leaderboard</span>
+      <button class="filter-pill" id="refreshLbBtn">↻ Refresh</button>
+    </div>
+    <div class="lb-wrap">
+      <div class="lb-thead">
+        <div>
+          <div class="lb-thead-title">Handicap Rankings</div>
+          <div class="lb-thead-sub" style="margin-top:4px;">All members · Lower is better</div>
+        </div>
+      </div>
+      <div id="lbBody"><div class="lb-empty">Loading…</div></div>
+    </div>
   </div>
 
   <!-- FEED -->
@@ -1836,10 +1845,9 @@ header::before{
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Navigation</div>
     <button onclick="closeMobileMenu()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.4rem;cursor:pointer;line-height:1;padding:0;">✕</button>
   </div>
-  <button class="mobile-menu-item" onclick="mobileMenuNav('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></button>
+  <button class="mobile-menu-item" onclick="mobileMenuNav('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Home</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('courses')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg><span>Courses</span></button>
-  <button class="mobile-menu-item" onclick="mobileMenuNav('leaderboard')"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span>Leaderboard</span></button>
-  <button class="mobile-menu-item" onclick="mobileMenuNav('stats')"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Stats</span></button>
+  <button class="mobile-menu-item" onclick="closeMobileMenu();openLogModal();"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Log a Round</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('social')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
 </div>
@@ -1908,10 +1916,12 @@ document.addEventListener('click',function(e){
   if(id==='signOutBtn'){doSignOut();return;}
   if(id==='navDashboard'){showSection('dashboard',e.target);return;}
   if(id==='navCourses'){showSection('courses',e.target);return;}
-  if(id==='navLeaderboard'){showSection('leaderboard',e.target);return;}
-  if(id==='navStats'){showSection('stats',e.target);return;}
+  if(id==='navLog'){openLogModal();return;}
   if(id==='navSocial'){showSection('social',e.target);return;}
   if(id==='navProfile'){showSection('profile',e.target);return;}
+  // Stats / Leaderboard reachable via buttons (no longer top-nav)
+  if(id==='dashStatsBtn'||id==='profileStatsBtn'){showSection('stats',null);return;}
+  if(id==='statsBackBtn'){showSection('dashboard',document.getElementById('navDashboard'));return;}
   // Log modal
   if(id==='openLogModalBtn'){openLogModal();return;}
   if(id==='closeLogModalBtn'||e.target.id==='logRoundModal'){closeLogModal();return;}
@@ -1922,7 +1932,7 @@ document.addEventListener('click',function(e){
   if(id==='exportFullBtn'){exportFullProfile();return;}
   if(id==='deleteAccountBtn'){deleteAccount();return;}
   // Unified social tabs
-  if(id==='sfFeed'||id==='sfMembers'||id==='sfSocieties'||id==='sfCompete'||id==='sfShare'){showSocialTab(id);return;}
+  if(id==='sfFeed'||id==='sfMembers'||id==='sfLeaderboard'||id==='sfSocieties'||id==='sfCompete'||id==='sfShare'){showSocialTab(id);return;}
   // Compete sub-tabs
   if(id==='scChallenges'||id==='scTournaments'||id==='scMatchPlay'){showCompeteTab(id);return;}
   // Feed filter
@@ -3174,8 +3184,8 @@ async function removeFavourite(id){
 var societies=[], currentSociety=null, matches=[], selectedShareRound=null;
 
 function showSocialTab(tabId){
-  var tabs=['sfFeed','sfMembers','sfSocieties','sfCompete','sfShare'];
-  var panels={sfFeed:'sf-feed',sfMembers:'sf-members',sfSocieties:'sf-societies',sfCompete:'sf-compete',sfShare:'sf-share'};
+  var tabs=['sfFeed','sfMembers','sfLeaderboard','sfSocieties','sfCompete','sfShare'];
+  var panels={sfFeed:'sf-feed',sfMembers:'sf-members',sfLeaderboard:'sf-leaderboard',sfSocieties:'sf-societies',sfCompete:'sf-compete',sfShare:'sf-share'};
   tabs.forEach(function(t){
     document.getElementById(t).classList.toggle('active',t===tabId);
     document.getElementById(panels[t]).style.display=t===tabId?'':'none';
@@ -3183,6 +3193,7 @@ function showSocialTab(tabId){
   document.getElementById('sp-society-detail').style.display='none';
   if(tabId==='sfFeed') loadFeed();
   if(tabId==='sfMembers') initMemberSearch();
+  if(tabId==='sfLeaderboard') loadLeaderboard();
   if(tabId==='sfSocieties') loadSocieties();
   if(tabId==='sfCompete'){ loadChallenges(); showCompeteTab('scChallenges'); }
   if(tabId==='sfShare') renderShareRoundList();
@@ -3724,7 +3735,7 @@ function closeMobileMenu(){
 
 function mobileMenuNav(section){
   closeMobileMenu();
-  var desktopMap={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',profile:'navProfile'};
+  var desktopMap={dashboard:'navDashboard',courses:'navCourses',social:'navSocial',profile:'navProfile'};
   showSection(section,document.getElementById(desktopMap[section]));
   var bottomMap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile'};
   document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
@@ -4399,7 +4410,7 @@ async function deleteAccount(){
 }
 
 // ── NAV & UTILS ───────────────────────────────────────────────────────────
-var SECTIONS=['dashboard','courses','leaderboard','stats','social','profile'];
+var SECTIONS=['dashboard','courses','stats','social','profile'];
 
 function showSection(s,btn,skipHistory){
   if(SECTIONS.indexOf(s)===-1) s='dashboard';
@@ -4407,15 +4418,14 @@ function showSection(s,btn,skipHistory){
     document.getElementById('section-'+x).style.display=x===s?'':'none';
   });
   document.querySelectorAll('.nav-item').forEach(function(b){b.classList.remove('active');});
-  // Highlight matching nav button
+  // Highlight matching nav button (Stats has no nav button — Home stays lit)
   if(btn){ btn.classList.add('active'); }
   else {
-    var map={dashboard:'navDashboard',courses:'navCourses',leaderboard:'navLeaderboard',stats:'navStats',social:'navSocial',profile:'navProfile'};
+    var map={dashboard:'navDashboard',courses:'navCourses',social:'navSocial',profile:'navProfile',stats:'navDashboard'};
     var nb=document.getElementById(map[s]); if(nb) nb.classList.add('active');
   }
   // Update URL hash
   if(!skipHistory) history.pushState({section:s},'','#'+s);
-  if(s==='leaderboard') loadLeaderboard();
   if(s==='courses') renderCoursesBrowser();
   if(s==='stats'){ loadRounds().then(function(){ renderStats(); }); }
   if(s==='social') loadSocial();
