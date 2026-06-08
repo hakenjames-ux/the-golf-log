@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loft — Track Your Golf</title>
+<title>LMG — Log My Golf</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root {
-  /* Electric fairway green on near-black */
-  --augusta: #5ad65a;        /* accent green (button/avatar backgrounds) */
+  /* Deep fairway green on near-black */
+  --augusta: #2f9e5b;        /* accent green (button/avatar backgrounds) */
   --augusta-deep: #f2f4f3;   /* primary heading/text on dark */
-  --augusta-mid: #46c246;    /* accent hover */
-  --augusta-light: #6ee06e;  /* focus ring */
-  --augusta-pale: #2a3a30;   /* muted/disabled surfaces */
-  --gold: #5ad65a;           /* secondary accent -> green */
-  --gold-light: #7de87d;
-  --gold-pale: #18211a;
+  --augusta-mid: #25804a;    /* accent hover (darker) */
+  --augusta-light: #3fb06b;  /* focus ring */
+  --augusta-pale: #243029;   /* muted/disabled surfaces */
+  --gold: #2f9e5b;           /* secondary accent -> green */
+  --gold-light: #46b873;
+  --gold-pale: #15201a;
   --white: #161719;          /* card surface */
   --off-white: #0a0a0b;      /* page background */
   --panel: #1c1d20;          /* elevated panel */
@@ -27,15 +27,15 @@
   --text-mid: #b4b4b8;
   --text-muted: #76767c;
   --danger: #ff5c5c;
-  --under: #5ad65a;
+  --under: #3fb06b;
   --under-bg: #14241a;
   --over: #ff6b6b;
   --over-bg: #281414;
   --shadow-sm: 0 1px 4px rgba(0,0,0,0.4);
   --shadow-md: 0 6px 20px rgba(0,0,0,0.45);
   --shadow-lg: 0 16px 48px rgba(0,0,0,0.55);
-  --azalea: #5ad65a;
-  --azalea-deep: #46c246;
+  --azalea: #2f9e5b;
+  --azalea-deep: #25804a;
   --azalea-pale: #14241a;
   --ink: #0d0e10;            /* dark surface: header, hero, auth */
   --ink-soft: #131417;
@@ -851,7 +851,7 @@ header::before{
   <div class="auth-left">
     <div class="auth-brand">
       <div class="auth-badge">The Social Golf Network</div>
-      <span class="auth-wordmark">Loft</span>
+      <span class="auth-wordmark">LMG</span>
       <span class="auth-sub">Track · Share · Compete</span>
     </div>
     <div class="landing-features">
@@ -925,7 +925,7 @@ header::before{
     <div class="header-top">
       <div class="header-brand">
         <div>
-          <div class="brand-name">LOFT</div>
+          <div class="brand-name">LMG</div>
         </div>
       </div>
       <div class="header-user">
@@ -943,7 +943,7 @@ header::before{
     <div class="header-nav">
       <button class="nav-item active" id="navDashboard">Home</button>
       <button class="nav-item" id="navCourses">Courses</button>
-      <button class="nav-item nav-log" id="navLog">＋ Log a Round</button>
+      <button class="nav-item nav-log" id="navLog">Log a Round</button>
       <button class="nav-item" id="navSocial">Social</button>
       <button class="nav-item" id="navProfile">Profile</button>
     </div>
@@ -1006,7 +1006,7 @@ header::before{
     <div class="panel chart-panel">
       <div class="section-head">
         <span class="section-label">Score Trend</span>
-        <button class="filter-pill" id="dashStatsBtn">📊 View Full Stats →</button>
+        <button class="filter-pill" id="dashStatsBtn">View Full Stats</button>
       </div>
       <canvas id="trendChart" height="100"></canvas>
     </div>
@@ -1036,8 +1036,7 @@ header::before{
 
     <!-- Log a Round CTA -->
     <div style="text-align:center;padding:32px 0 8px;">
-      <button id="openLogModalBtn" style="display:inline-flex;align-items:center;gap:10px;background:var(--augusta);color:white;border:none;border-radius:4px;padding:16px 36px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 18px rgba(26,58,42,0.25);transition:all 0.2s;">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <button id="openLogModalBtn" style="display:inline-flex;align-items:center;gap:10px;background:var(--augusta);color:var(--ink);border:none;border-radius:7px;padding:16px 36px;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,0.3);transition:all 0.2s;">
         Log a Round
       </button>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-top:10px;">Record today's round &amp; update your handicap</div>
@@ -1119,7 +1118,7 @@ header::before{
 
       <!-- OVERVIEW -->
       <div id="ps-overview" class="active">
-        <button class="log-btn" id="profileStatsBtn" style="width:100%;margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:8px;">📊 View Full Stats</button>
+        <button class="log-btn" id="profileStatsBtn" style="width:100%;margin-bottom:24px;">View Full Stats</button>
         <div class="mob-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
           <div class="panel">
             <div class="section-head" style="margin-bottom:16px;"><span class="section-label">Home Course</span></div>
@@ -1179,7 +1178,7 @@ header::before{
           <div id="profileShareUrl" style="display:none;">
             <div style="height:1px;background:var(--border);margin-bottom:16px;"></div>
             <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px;font-weight:300;">Share this link with friends to show off your stats.</p>
-            <button onclick="copyProfileLink()" class="log-btn" style="display:inline-flex;align-items:center;gap:8px;">🔗 Copy Profile Link</button>
+            <button onclick="copyProfileLink()" class="log-btn" style="display:inline-flex;align-items:center;gap:8px;">Copy Profile Link</button>
             <div id="profileShareLink" style="display:none;">—</div>
           </div>
         </div>
@@ -1243,12 +1242,12 @@ header::before{
         <div class="panel" style="margin-bottom:16px;">
           <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Rounds</span></div>
           <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download all your rounds as a CSV — opens in Excel or Google Sheets.</p>
-          <button class="log-btn" id="exportCsvBtn">⬇ Export Rounds as CSV</button>
+          <button class="log-btn" id="exportCsvBtn">Export Rounds as CSV</button>
         </div>
         <div class="panel">
           <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Export Full Profile</span></div>
           <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;">Download your full profile as JSON including handicap, home course, favourites and all rounds.</p>
-          <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">⬇ Export Full Profile</button>
+          <button class="log-btn" id="exportFullBtn" style="background:var(--panel);color:var(--text-mid);border:1px solid var(--border);">Export Full Profile</button>
         </div>
       </div>
 
@@ -1257,7 +1256,7 @@ header::before{
         <div class="panel" style="border:1px solid #f0c0c0;">
           <div class="section-head" style="margin-bottom:14px;"><span class="section-label" style="color:var(--danger);">Danger Zone</span></div>
           <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px;font-weight:300;line-height:1.6;">Permanently delete your account and all associated data including rounds, favourites, societies and match history. This <strong>cannot</strong> be undone.</p>
-          <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">🗑 Delete My Account</button>
+          <button class="log-btn" id="deleteAccountBtn" style="background:var(--danger);border-color:var(--danger);">Delete My Account</button>
         </div>
       </div>
 
@@ -1282,7 +1281,7 @@ header::before{
       <button class="filter-pill" data-filter="heathland" id="filterHeathland">Heathland</button>
       <button class="filter-pill" data-filter="moorland" id="filterMoorland">Moorland</button>
       <button class="filter-pill" data-filter="downland" id="filterDownland">Downland</button>
-      <button id="addCourseBtn" onclick="openAddCourse()" style="padding:9px 18px;border:1px solid var(--gold);border-radius:2px;background:var(--gold);color:var(--augusta-deep);font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;">+ Add Course</button>
+      <button id="addCourseBtn" onclick="openAddCourse()" style="padding:9px 18px;border:1px solid var(--gold);border-radius:2px;background:var(--gold);color:var(--augusta-deep);font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;">Add Course</button>
     </div>
     <div class="courses-grid" id="coursesGrid"></div>
   </div>
@@ -1295,7 +1294,7 @@ header::before{
 
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
     <button class="filter-pill" id="statsBackBtn">← Back to Home</button>
-    <button onclick="exportStatsPDF()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';">🖨 Export Stats</button>
+    <button onclick="exportStatsPDF()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';">Export Stats</button>
   </div>
 
   <!-- Handicap history chart -->
@@ -1385,7 +1384,7 @@ header::before{
   <div id="sf-leaderboard" style="display:none">
     <div class="section-head" style="margin-bottom:24px;">
       <span class="section-label">Global Leaderboard</span>
-      <button class="filter-pill" id="refreshLbBtn">↻ Refresh</button>
+      <button class="filter-pill" id="refreshLbBtn">Refresh</button>
     </div>
     <div class="lb-wrap">
       <div class="lb-thead">
@@ -1405,7 +1404,7 @@ header::before{
       <div style="display:flex;gap:8px;align-items:center;">
         <button class="filter-pill active" id="feedFilterFollowing">Following</button>
         <button class="filter-pill" id="feedFilterAll">Everyone</button>
-        <button class="filter-pill" id="refreshFeedBtn">↻</button>
+        <button class="filter-pill" id="refreshFeedBtn">Refresh</button>
       </div>
     </div>
     <div id="feedList"></div>
@@ -1596,7 +1595,7 @@ header::before{
         <div class="section-head" style="margin-bottom:18px;"><span class="section-label">Scorecard Preview</span></div>
         <div id="scorecardPreview" style="display:none;">
           <canvas id="scorecardCanvas" style="width:100%;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,0.15);"></canvas>
-          <button class="log-btn" id="downloadCardBtn" style="margin-top:12px;">⬇ Download Scorecard</button>
+          <button class="log-btn" id="downloadCardBtn" style="margin-top:12px;">Download Scorecard</button>
         </div>
         <div id="scorecardEmpty" style="color:var(--text-muted);font-style:italic;font-size:0.88rem;">Select a round from the list to generate a scorecard image.</div>
       </div>
@@ -1656,7 +1655,7 @@ header::before{
       <input class="form-input" id="weatherSearchInput" type="text" placeholder="Search location…" style="flex:1;">
       <button class="log-btn" onclick="fetchWeatherBySearch()" style="width:auto;padding:11px 18px;white-space:nowrap;">Search</button>
     </div>
-    <button onclick="fetchWeatherByLocation()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;margin-bottom:20px;width:100%;">📍 Use My Current Location</button>
+    <button onclick="fetchWeatherByLocation()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;margin-bottom:20px;width:100%;">Use My Current Location</button>
 
     <div id="weatherResult" style="display:none;">
       <div style="background:var(--augusta);border-radius:var(--radius);padding:24px;color:white;text-align:center;margin-bottom:16px;">
@@ -1708,7 +1707,7 @@ header::before{
 <div class="modal-overlay" id="logRoundModal" style="display:none;align-items:flex-start;padding-top:40px;">
   <div class="modal-box" style="max-width:560px;max-height:90vh;overflow-y:auto;">
     <button class="modal-close" id="closeLogModalBtn">✕</button>
-    <div class="modal-title">⛳ Log a Round</div>
+    <div class="modal-title">Log a Round</div>
     <div class="modal-sub">Record your round — your handicap will update automatically</div>
 
     <div class="form-group">
@@ -1810,7 +1809,7 @@ header::before{
     <div id="rdNotes" style="display:none;background:var(--ink-soft);border-left:3px solid var(--gold);border-radius:var(--radius);padding:12px 14px;font-size:0.85rem;color:var(--text-mid);font-style:italic;line-height:1.5;margin-bottom:16px;"></div>
 
     <!-- Delete -->
-    <button class="log-btn" id="rdDeleteBtn" style="background:none;border:1px solid var(--border);color:var(--over);width:100%;">🗑 Delete this round</button>
+    <button class="log-btn" id="rdDeleteBtn" style="background:none;border:1px solid var(--border);color:var(--over);width:100%;">Delete this round</button>
   </div>
 </div>
 
@@ -2373,9 +2372,9 @@ async function renderCoursesBrowser(){
           (avgDiff?'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);">Difficulty: '+avgDiff+'/5</span>':'')+
         '</div>'+
         '<div style="display:flex;gap:8px;margin-top:10px;">'+
-          '<button class="cc-action-btn review-btn" data-id="'+c.id+'" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'')+'" data-county="'+(c.county||'')+'">⭐ Review</button>'+
-          '<button class="cc-action-btn weather-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">🌤 Weather</button>'+
-          '<button class="cc-action-btn book-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">📅 Book</button>'+
+          '<button class="cc-action-btn review-btn" data-id="'+c.id+'" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'')+'" data-county="'+(c.county||'')+'">Review</button>'+
+          '<button class="cc-action-btn weather-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">Weather</button>'+
+          '<button class="cc-action-btn book-btn" data-name="'+c.name.replace(/"/g,'&quot;')+'" data-loc="'+(c.location||'').replace(/"/g,'&quot;')+'">Book</button>'+
         '</div>'+
       '</div>';
     }).join('');
@@ -2464,7 +2463,7 @@ function renderDashboardExtras(){
       var delta=Math.round((hcp-past)*10)/10;
       var improved=delta<0; // lower handicap = better
       trendEl.style.display='block';
-      trendEl.style.background=improved?'rgba(90,214,90,0.15)':'rgba(255,107,107,0.15)';
+      trendEl.style.background=improved?'rgba(47,158,91,0.18)':'rgba(255,107,107,0.15)';
       trendEl.style.color=improved?'var(--augusta)':'var(--over)';
       trendEl.textContent=(improved?'▼ ':'▲ ')+Math.abs(delta).toFixed(1)+' this month';
     } else {
