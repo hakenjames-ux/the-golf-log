@@ -2108,6 +2108,12 @@ async function logRound(){
   var rating=parseFloat(document.getElementById('fRating').value)||par;
   var slope=parseInt(document.getElementById('fSlope').value)||113;
   var total=parseInt(document.getElementById('fTotal').value);
+  // For 9-hole rounds the par/rating fields hold the course's full 18-hole values
+  // (auto-filled when selecting a course), so halve them to match a 9-hole score.
+  if(holes===9){
+    if(par>=54) par=Math.round(par/2);
+    if(rating>=54) rating=parseFloat((rating/2).toFixed(1));
+  }
   if(!date){toast('Please select a date.');return;}
   var minScore=holes===9?18:36;
   var maxScore=holes===9?81:150;
