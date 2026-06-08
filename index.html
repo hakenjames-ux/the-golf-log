@@ -703,7 +703,15 @@ header::before{
   /* Calculator grid */
   /* Account settings */
   .panel div[style*="display:flex;gap:8px"]{flex-wrap:wrap;}
+  /* Collapse fixed-width inline grids that cause horizontal overflow */
+  div[style*="1fr 360px"]{grid-template-columns:1fr !important;}
+  div[style*="1fr 1fr 1fr auto"]{grid-template-columns:1fr !important;}
+  div[style*="grid-template-columns:1fr 1px 1fr"]{grid-template-columns:1fr !important;}
+  /* Nothing wider than the screen */
+  img{max-width:100%;}
+  .scorecard-hero,.panel,.container{max-width:100%;}
 }
+html{overflow-x:hidden;}
 @media print{
   #appShell nav,.mobile-nav,.dark-toggle,button,.filter-pill,.log-btn,.row-del,.courses-bar{display:none !important;}
   body{background:white !important;color:black !important;}
@@ -3651,26 +3659,26 @@ async function loadCoursePhotos(courseId){
   }).join('');
 }
 
-// Shared: upload one image to a course's gallery
+var PHOTO_MIME={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',heic:'image/heic',heif:'image/heif'};
+
+// Shared: upload one image to a course's gallery (handles iPhone HEIC / empty mime)
 async function uploadPhotoForCourse(file,courseId,courseName){
   if(!file||!courseId) return false;
-  if(file.size>5*1024*1024){toast(file.name+' is over 5MB — skipped.');return false;}
-  if(!/^image\//.test(file.type)) return false;
-  var ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  if(file.size>15*1024*1024){toast(file.name+' is too large (max 15MB) — skipped.');return false;}
+  var ext=((file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,''))||'jpg';
+  var contentType=file.type||PHOTO_MIME[ext]||'image/jpeg';
   var path=courseId+'/'+currentUser.id+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;
-  var up=await sb.storage.from('course-photos').upload(path,file,{contentType:file.type});
-  if(up.error){toast('Upload failed: '+up.error.message);return false;}
+  var up=await sb.storage.from('course-photos').upload(path,file,{contentType:contentType});
+  if(up.error){toast('Photo upload failed: '+up.error.message);return false;}
   var pub=sb.storage.from('course-photos').getPublicUrl(path);
   var dname=(currentUser.user_metadata&&currentUser.user_metadata.display_name)||currentUser.email.split('@')[0];
   var ins=await sb.from('course_photos').insert({course_id:courseId,course_name:courseName,user_id:currentUser.id,display_name:dname,url:pub.data.publicUrl});
-  if(ins.error){toast('Error saving photo: '+ins.error.message);return false;}
+  if(ins.error){toast('Photo save failed: '+ins.error.message);return false;}
   return true;
 }
 
 async function uploadCoursePhoto(file){
   if(!currentReviewCourseId) return;
-  if(file.size>5*1024*1024){toast('Image must be under 5MB.');return;}
-  if(!/^image\//.test(file.type)){toast('Please choose an image file.');return;}
   toast('Uploading photo…');
   var ok=await uploadPhotoForCourse(file,currentReviewCourseId,currentReviewCourseName);
   if(ok){ toast('Photo added ✓'); loadCoursePhotos(currentReviewCourseId); }
