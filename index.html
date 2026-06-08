@@ -316,12 +316,12 @@ header::before{
   color:var(--gold);margin-bottom:8px;
 }
 .hero-hcp-value{
-  font-family:'Cormorant Garamond',serif;font-size:5.5rem;font-weight:600;
-  line-height:0.9;color:#fff;letter-spacing:-0.02em;
+  font-family:'Inter',sans-serif;font-size:4.2rem;font-weight:800;
+  line-height:1.05;color:#fff;letter-spacing:-0.04em;
 }
 .hero-hcp-sub{
-  font-size:0.75rem;font-weight:300;color:rgba(255,255,255,0.45);
-  margin-top:10px;letter-spacing:0.04em;
+  font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.45);
+  margin-top:8px;letter-spacing:0.02em;
 }
 .hero-divider{background:rgba(255,255,255,0.1);width:1px;}
 .hero-stats{
@@ -337,8 +337,8 @@ header::before{
 .hero-stat:first-child{padding-left:0;}
 .hero-stat:last-child{border-right:none;}
 .hero-stat-val{
-  font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;
-  color:var(--gold-light);line-height:1;
+  font-family:'Inter',sans-serif;font-size:2rem;font-weight:800;
+  color:var(--gold-light);line-height:1;letter-spacing:-0.03em;
 }
 .hero-stat-lbl{
   font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:500;
@@ -3060,7 +3060,7 @@ function copyProfileLink(){
 function renderHomeCourse(){
   var el=document.getElementById('homeCourseDisplay');
   if(profileData&&profileData.home_course_name){
-    el.innerHTML='<div class="home-course-card"><span class="home-course-name">🏠 '+profileData.home_course_name+'</span><button class="home-course-clear" id="homeClearBtn">✕</button></div>';
+    el.innerHTML='<div class="home-course-card"><span class="home-course-name">'+profileData.home_course_name+'</span><button class="home-course-clear" id="homeClearBtn">✕</button></div>';
     el.style.display='block';
   }else{
     el.innerHTML='<div style="font-size:0.82rem;color:var(--text-muted);font-style:italic;margin-bottom:8px;">No home course set</div>';
@@ -3075,7 +3075,7 @@ function renderFavourites(){
     return;
   }
   el.innerHTML=favourites.map(function(f){
-    return '<div class="fav-item">⭐ '+f.course_name+'<button class="fav-remove" data-id="'+f.id+'">✕</button></div>';
+    return '<div class="fav-item">'+f.course_name+'<button class="fav-remove" data-id="'+f.id+'">✕</button></div>';
   }).join('');
 }
 
@@ -4484,7 +4484,7 @@ async function runGlobalSearch(q){
       return '<div class="gs-result" data-type="member" data-id="'+p.id+'" data-name="'+encodeURIComponent(p.display_name||'')+'">'+
         avatarHtml+
         '<div><div class="gs-result-name">'+p.display_name+(isYou?' <span style="font-size:0.65rem;color:var(--gold);">(you)</span>':'')+'</div>'+
-        (p.home_course_name?'<div class="gs-result-sub">🏠 '+p.home_course_name+'</div>':'')+
+        (p.home_course_name?'<div class="gs-result-sub">'+p.home_course_name+'</div>':'')+
         '</div><span class="gs-result-badge">Member</span></div>';
     }).join('');
   }
@@ -4669,7 +4669,7 @@ async function runMemberSearch(q){
       avatarHtml+
       '<div style="flex:1;">'+
         '<div style="font-weight:600;color:var(--augusta-deep);font-size:0.9rem;">'+p.display_name+(isYou?' <span style="font-size:0.65rem;color:var(--gold);font-family:\'Barlow Condensed\',sans-serif;font-weight:600;letter-spacing:0.1em;">(you)</span>':'')+'</div>'+
-        (p.home_course_name?'<div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">🏠 '+p.home_course_name+'</div>':'')+
+        (p.home_course_name?'<div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">'+p.home_course_name+'</div>':'')+
       '</div>'+
       '<div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">'+
         '<div>'+
