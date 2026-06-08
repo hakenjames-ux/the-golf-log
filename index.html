@@ -138,8 +138,8 @@ body::after{
 }
 .auth-form-wrap{width:100%;}
 .auth-heading{
-  font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:600;
-  color:var(--augusta-deep);margin-bottom:6px;
+  font-family:'Inter',sans-serif;font-size:1.5rem;font-weight:700;
+  letter-spacing:-0.02em;color:var(--augusta-deep);margin-bottom:6px;
 }
 .landing-features{position:relative;z-index:2;margin-top:32px;display:flex;flex-direction:column;gap:18px;}
 .landing-feature{display:flex;align-items:flex-start;gap:14px;}
@@ -219,14 +219,10 @@ header::before{
 }
 .brand-icon svg{width:28px;height:28px;}
 .brand-name{
-  font-family:'Inter',sans-serif;font-size:1.5rem;font-weight:800;
-  color:#fff;letter-spacing:-0.03em;line-height:1;
+  font-family:'Inter',sans-serif;font-size:2.1rem;font-weight:800;
+  color:#fff;letter-spacing:0.04em;line-height:1;text-transform:uppercase;
 }
-.brand-tagline{
-  font-family:'Inter',sans-serif;font-size:0.56rem;font-weight:600;
-  letter-spacing:0.28em;text-transform:uppercase;color:var(--augusta);opacity:0.9;
-  margin-top:3px;
-}
+.brand-tagline{display:none;}
 .header-user{display:flex;align-items:center;gap:10px;}
 .user-name{
   font-size:0.78rem;font-weight:500;color:rgba(255,255,255,0.6);
@@ -350,8 +346,8 @@ header::before{
   border-bottom:1px solid var(--border);
 }
 .section-label{
-  font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;
-  font-style:italic;color:var(--augusta-deep);
+  font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:700;
+  letter-spacing:-0.01em;color:var(--augusta-deep);
   display:flex;align-items:center;gap:10px;
 }
 .section-label::before{
@@ -483,7 +479,7 @@ header::before{
   padding:20px 28px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.lb-thead-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;font-style:italic;color:#fff;}
+.lb-thead-title{font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:-0.01em;color:#fff;}
 .lb-thead-sub{font-family:'Barlow Condensed',sans-serif;font-size:0.62rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);opacity:0.8;}
 .lb-row{
   display:grid;grid-template-columns:52px 1fr 80px 80px;
@@ -670,7 +666,7 @@ header::before{
   /* Dark toggle */
   .dark-toggle{bottom:72px;right:12px;}
   /* Brand */
-  .brand-name{font-size:1.2rem !important;}
+  .brand-name{font-size:1.6rem !important;}
   /* Hole grid */
   .hole-grid{grid-template-columns:repeat(5,1fr) !important;}
   .hole-lbl-row{grid-template-columns:repeat(5,1fr) !important;}
@@ -787,7 +783,7 @@ header::before{
 .modal-overlay{position:fixed;inset:0;background:rgba(15,36,25,0.6);z-index:500;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal-box{background:var(--white);border-radius:var(--radius);padding:36px 40px;width:100%;max-width:520px;box-shadow:0 24px 60px rgba(0,0,0,0.3);position:relative;max-height:90vh;overflow-y:auto;}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;font-style:italic;color:var(--augusta-deep);margin-bottom:4px;}
+.modal-title{font-family:'Inter',sans-serif;font-size:1.3rem;font-weight:700;letter-spacing:-0.01em;color:var(--augusta-deep);margin-bottom:4px;}
 .modal-sub{font-size:0.8rem;color:var(--text-muted);margin-bottom:24px;font-weight:300;}
 .modal-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:1.2rem;color:var(--text-muted);cursor:pointer;}
 .modal-close:hover{color:var(--danger);}
@@ -822,7 +818,7 @@ header::before{
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
 }
-.mini-label span{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;font-weight:600;color:var(--augusta-deep);letter-spacing:0;}
+.mini-label span{font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:var(--augusta-deep);letter-spacing:-0.01em;}
 
 @keyframes spin{to{transform:rotate(360deg);}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
@@ -919,19 +915,8 @@ header::before{
   <header>
     <div class="header-top">
       <div class="header-brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <!-- Flag pole -->
-            <line x1="30" y1="10" x2="30" y2="85" stroke="var(--gold)" stroke-width="4" stroke-linecap="round"/>
-            <!-- Flag -->
-            <polygon points="30,10 72,24 30,38" fill="var(--gold)"/>
-            <!-- Ground/hole -->
-            <ellipse cx="35" cy="86" rx="18" ry="5" fill="none" stroke="var(--gold)" stroke-width="2.5" opacity="0.5"/>
-          </svg>
-        </div>
         <div>
-          <div class="brand-name">Loft</div>
-          <div class="brand-tagline">Track Your Golf</div>
+          <div class="brand-name">LOFT</div>
         </div>
       </div>
       <div class="header-user">
