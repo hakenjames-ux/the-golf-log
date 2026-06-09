@@ -169,7 +169,7 @@ body::after{
   border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.2s;
 }
 .auth-tab.active{color:var(--augusta);border-bottom-color:var(--gold);}
-.form-group{margin-bottom:18px;}
+.form-group{margin-bottom:var(--s4);}
 .form-label{
   display:block;font-size:0.68rem;font-weight:600;
   letter-spacing:0.04em;text-transform:uppercase;
@@ -293,7 +293,7 @@ header::before{
 .gold-rule{height:2px;background:linear-gradient(90deg,var(--gold) 0%,var(--azalea) 40%,var(--gold-light) 60%,var(--gold) 100%);}
 
 /* ══════════════════ LAYOUT ══════════════════ */
-.container{max-width:1160px;margin:0 auto;padding:36px 32px 64px;}
+.container{max-width:1160px;margin:0 auto;padding:var(--s6) var(--s6) 64px;}
 
 /* ── SCORECARD HERO ── */
 .scorecard-hero{
@@ -328,8 +328,8 @@ header::before{
   color:var(--gold);margin-bottom:8px;
 }
 .hero-hcp-value{
-  font-family:'Inter',sans-serif;font-size:4.2rem;font-weight:800;
-  line-height:1.05;color:#fff;letter-spacing:-0.04em;
+  font-family:'Inter',sans-serif;font-size:3.6rem;font-weight:700;
+  line-height:1.05;color:#fff;letter-spacing:-0.03em;
 }
 .hero-hcp-sub{
   font-size:0.75rem;font-weight:400;color:rgba(255,255,255,0.45);
@@ -361,8 +361,8 @@ header::before{
 /* ── SECTION LABELS ── */
 .section-head{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:20px;
-  padding-bottom:12px;
+  margin-bottom:var(--s4);
+  padding-bottom:var(--s3);
   border-bottom:1px solid var(--border);
 }
 .section-label{
@@ -385,10 +385,10 @@ header::before{
 /* ── CHART PANEL ── */
 .panel{
   background:var(--white);border:1px solid var(--border);
-  border-radius:var(--radius);padding:28px;
+  border-radius:var(--radius);padding:var(--s5);
   box-shadow:var(--shadow-sm);
 }
-.chart-panel{margin-bottom:24px;animation:fadeUp 0.5s 0.04s ease both;}
+.chart-panel{margin-bottom:var(--s5);animation:fadeUp 0.5s 0.04s ease both;}
 
 /* ── SCORECARD TABLE ── */
 .sc-table{width:100%;border-collapse:collapse;}
@@ -3512,7 +3512,7 @@ function drawScorecard(r){
   ctx.fillText(r.course,24,72);
   // Date
   ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.font='13px "Barlow", sans-serif';
+  ctx.font='13px "Inter", sans-serif';
   ctx.fillText(fDate(r.date),24,95);
   // Divider
   ctx.strokeStyle='rgba(255,255,255,0.12)';
@@ -3542,7 +3542,7 @@ function drawScorecard(r){
   ctx.fillStyle='rgba(201,168,76,0.15)';
   ctx.fillRect(0,H-50,W,50);
   ctx.fillStyle='rgba(255,255,255,0.4)';
-  ctx.font='11px "Barlow", sans-serif';
+  ctx.font='11px "Inter", sans-serif';
   ctx.fillText('Logged on The Golf Log · '+window.location.hostname,24,H-18);
   // Score colour indicator
   var ov=r.score-r.par;
