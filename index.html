@@ -156,7 +156,8 @@ body::after{
 }
 .landing-features{position:relative;z-index:2;margin-top:32px;display:flex;flex-direction:column;gap:18px;}
 .landing-feature{display:flex;align-items:flex-start;gap:14px;}
-.landing-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+.landing-icon{flex-shrink:0;margin-top:2px;line-height:0;}
+.landing-icon svg{width:20px;height:20px;fill:none;stroke:var(--gold);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 .landing-feat-title{font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
 .landing-feat-desc{font-size:0.8rem;color:rgba(255,255,255,0.55);font-weight:300;line-height:1.4;}
 .landing-footer{position:relative;z-index:2;margin-top:32px;font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.25);}
@@ -798,9 +799,12 @@ html{overflow-x:hidden;}
 .society-card:hover{border-color:var(--gold);box-shadow:var(--shadow-md);}
 .society-card-name{font-weight:700;color:var(--augusta-deep);font-size:0.92rem;}
 .society-card-meta{font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-muted);margin-top:2px;}padding:16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);transition:all 0.2s;text-align:center;}
-.achievement-card.earned{background:linear-gradient(135deg,#f5f0e0,#fdf8ec);border-color:var(--gold);}
-.achievement-card.locked{opacity:0.45;filter:grayscale(0.5);}
-.achievement-icon{font-size:2rem;margin-bottom:8px;line-height:1;}
+.achievement-card{padding:var(--s4);border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);transition:all 0.2s;text-align:center;}
+.achievement-card.earned{background:rgba(47,158,91,0.10);border-color:var(--augusta);}
+.achievement-card.locked{opacity:0.5;}
+.achievement-icon{margin-bottom:10px;line-height:0;}
+.achievement-icon svg{width:26px;height:26px;fill:none;stroke:var(--text-muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.achievement-card.earned .achievement-icon svg{stroke:var(--augusta);}
 .achievement-name{font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--augusta-deep);margin-bottom:3px;}
 .achievement-desc{font-size:0.72rem;color:var(--text-muted);font-weight:300;}
 .fav-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border-radius:var(--radius);margin-bottom:6px;font-size:0.84rem;color:var(--augusta-deep);font-weight:500;}
@@ -877,35 +881,35 @@ html{overflow-x:hidden;}
     </div>
     <div class="landing-features">
       <div class="landing-feature">
-        <span class="landing-icon">⛳</span>
+        <span class="landing-icon"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
         <div>
           <div class="landing-feat-title">WHS Handicap Tracking</div>
           <div class="landing-feat-desc">Official World Handicap System calculation after every round</div>
         </div>
       </div>
       <div class="landing-feature">
-        <span class="landing-icon">📊</span>
+        <span class="landing-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
         <div>
           <div class="landing-feat-title">Stats &amp; Insights</div>
           <div class="landing-feat-desc">Score trends, par breakdowns, driving distance and more</div>
         </div>
       </div>
       <div class="landing-feature">
-        <span class="landing-icon">🏌️</span>
+        <span class="landing-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
         <div>
           <div class="landing-feat-title">800+ UK Courses</div>
           <div class="landing-feat-desc">Search and log rounds on any course in Great Britain</div>
         </div>
       </div>
       <div class="landing-feature">
-        <span class="landing-icon">🏆</span>
+        <span class="landing-icon"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span>
         <div>
           <div class="landing-feat-title">Societies &amp; Tournaments</div>
           <div class="landing-feat-desc">Create groups, run competitions and challenge friends</div>
         </div>
       </div>
       <div class="landing-feature">
-        <span class="landing-icon">🌤</span>
+        <span class="landing-icon"><svg viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 1 0 0-9h-1.8A7 7 0 1 0 4 16.9"/><line x1="8" y1="13" x2="8" y2="21"/><line x1="12" y1="15" x2="12" y2="23"/><line x1="16" y1="13" x2="16" y2="21"/></svg></span>
         <div>
           <div class="landing-feat-title">Course Weather &amp; Reviews</div>
           <div class="landing-feat-desc">Live weather and member ratings for every course</div>
@@ -1079,7 +1083,7 @@ html{overflow-x:hidden;}
             <span id="avatarInitial" style="font-family:'Inter',serif;font-size:2rem;font-weight:600;color:white;line-height:1;">?</span>
             <img id="avatarImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;">
           </div>
-          <label for="avatarUpload" title="Change photo" style="position:absolute;bottom:0;right:0;background:var(--gold);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.7rem;box-shadow:0 1px 4px rgba(0,0,0,0.3);">📷</label>
+          <label for="avatarUpload" title="Change photo" style="position:absolute;bottom:0;right:0;background:var(--gold);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.3);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></label>
           <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
         </div>
       </div>
@@ -2226,7 +2230,7 @@ async function logRound(){
   if(document.getElementById('fNotes')) document.getElementById('fNotes').value='';
   clearRoundPhotos();
   closeLogModal();
-  renderAll(); toast('Round recorded! ⛳');
+  renderAll(); toast('Round recorded!');
   // Upload any attached photos to the course gallery (and the user's profile)
   if(photosToUpload.length){
     toast('Uploading '+photosToUpload.length+' photo'+(photosToUpload.length>1?'s':'')+'…');
@@ -2566,7 +2570,7 @@ function renderGoalCard(hcp){
   }
 
   if(!goals.length){
-    el.innerHTML='<div style="font-size:0.95rem;color:var(--augusta-deep);font-weight:600;padding:8px 0;">🏆 You\'ve hit every milestone — you\'re playing elite golf!</div>';
+    el.innerHTML='<div style="font-size:0.95rem;color:var(--augusta-deep);font-weight:600;padding:8px 0;">You\'ve hit every milestone — you\'re playing elite golf!</div>';
     return;
   }
 
@@ -2610,7 +2614,7 @@ async function renderDashFeedSlice(){
     return '<div class="panel" style="display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:10px;">'+
       avatarHtml+
       '<div style="flex:1;"><div style="font-weight:600;color:var(--augusta-deep);font-size:0.85rem;">'+name+'</div>'+
-      '<div style="font-size:0.72rem;color:var(--text-muted);">⛳ '+round.course+' · '+fDate(round.date)+'</div></div>'+
+      '<div style="font-size:0.72rem;color:var(--text-muted);">'+round.course+' · '+fDate(round.date)+'</div></div>'+
       '<div style="text-align:right;"><div style="font-family:\'Inter\',serif;font-size:1.4rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+round.score+'</div>'+
       '<div style="font-size:0.7rem;font-weight:700;color:'+ovCol+';">'+ovS+'</div></div>'+
     '</div>';
@@ -2774,65 +2778,6 @@ function renderBreakdown(){
   }).join('');
 }
 
-function renderAvgStats(){
-  var rs=rounds.filter(function(r){return r.putts||r.fairways_hit||r.greens_in_regulation||r.penalties;});
-  function avg(arr){ var v=arr.filter(function(x){return x!=null;}); return v.length?Math.round(v.reduce(function(a,b){return a+b;},0)/v.length*10)/10:null; }
-  var stats=[
-    {label:'Avg Putts',val:avg(rounds.map(function(r){return r.putts;})),icon:'⛳',unit:'per round'},
-    {label:'Fairways Hit',val:avg(rounds.map(function(r){return r.fairways_hit;})),icon:'🏌️',unit:'of 14'},
-    {label:'Greens in Reg',val:avg(rounds.map(function(r){return r.greens_in_regulation;})),icon:'🎯',unit:'of 18'},
-    {label:'Avg Penalties',val:avg(rounds.map(function(r){return r.penalties;})),icon:'⚠️',unit:'per round'},
-    {label:'Avg Score',val:avg(rounds.map(function(r){return r.score;})),icon:'📊',unit:'strokes'},
-    {label:'Best Diff',val:Math.min.apply(null,rounds.map(function(r){return r.diff;})),icon:'🏆',unit:'differential'},
-    {label:'Rounds Played',val:rounds.length,icon:'📅',unit:'total'},
-    {label:'Avg Diff',val:avg(rounds.map(function(r){return r.diff;})),icon:'📈',unit:'handicap diff'},
-  ];
-  document.getElementById('avgStats').innerHTML=stats.map(function(s){
-    return '<div style="background:var(--panel);border-radius:var(--radius);padding:14px 16px;">'+
-      '<div style="font-size:1.2rem;margin-bottom:4px;">'+s.icon+'</div>'+
-      '<div style="font-family:\'Inter\',serif;font-size:1.6rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+(s.val!==null?s.val:'—')+'</div>'+
-      '<div style="font-family:\'Inter\',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);margin-top:3px;">'+s.label+'</div>'+
-      '<div style="font-size:0.68rem;color:var(--text-muted);font-weight:300;">'+s.unit+'</div>'+
-    '</div>';
-  }).join('');
-}
-
-function renderParBreakdown(){
-  var el=document.getElementById('parBreakdownCards');
-  if(!el) return;
-  if(!rounds.length){
-    el.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-style:italic;padding:20px;">No rounds logged yet.</div>';
-    return;
-  }
-  // Derive rough par-type performance from score vs par
-  // Group rounds into under par / level / over par buckets and show scoring trends
-  var under=rounds.filter(function(r){return r.score<r.par;});
-  var level=rounds.filter(function(r){return r.score===r.par;});
-  var over=rounds.filter(function(r){return r.score>r.par;});
-  function pct(n){return rounds.length?Math.round(n/rounds.length*100):0;}
-  function avgDiff(arr){
-    if(!arr.length) return null;
-    var s=arr.reduce(function(a,r){return a+(r.score-r.par);},0);
-    return Math.round(s/arr.length*10)/10;
-  }
-  var cards=[
-    {label:'Under Par Rounds',icon:'🟢',count:under.length,pct:pct(under.length),avg:avgDiff(under),color:'var(--under)'},
-    {label:'Level Par Rounds',icon:'🟡',count:level.length,pct:pct(level.length),avg:0,color:'var(--gold)'},
-    {label:'Over Par Rounds',icon:'🔴',count:over.length,pct:pct(over.length),avg:avgDiff(over),color:'var(--over)'}
-  ];
-  el.innerHTML=cards.map(function(c){
-    return '<div style="background:var(--panel);border-radius:var(--radius);padding:18px;text-align:center;">'+
-      '<div style="font-size:1.5rem;margin-bottom:8px;">'+c.icon+'</div>'+
-      '<div style="font-family:\'Inter\',serif;font-size:2.2rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+c.count+'</div>'+
-      '<div style="font-family:\'Inter\',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;">'+c.label+'</div>'+
-      '<div style="margin-top:8px;height:4px;background:rgba(0,0,0,0.06);border-radius:2px;overflow:hidden;">'+
-        '<div style="height:100%;width:'+c.pct+'%;background:'+c.color+';border-radius:2px;transition:width 0.6s;"></div>'+
-      '</div>'+
-      '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px;">'+c.pct+'% of rounds'+(c.avg!==null&&c.count?' · avg '+( c.avg>0?'+':'')+c.avg+' vs par':'')+'</div>'+
-    '</div>';
-  }).join('');
-}
-
 // ── ROUND CALENDAR ───────────────────────────────────────────────────────
 var calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 
@@ -2930,7 +2875,7 @@ function renderCalendar(){
         var ov=r.score-r.par, ovS=ov===0?'E':(ov>0?'+'+ov:''+ov);
         var cls=ov<0?'var(--under)':ov>0?'var(--over)':'var(--gold)';
         return '<div style="display:flex;align-items:center;gap:12px;'+(dayRounds.length>1?'padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:10px;':'')+'">'+
-          '<div style="font-size:1.5rem;">⛳</div>'+
+          
           '<div style="flex:1;">'+
             '<div style="font-weight:700;color:var(--augusta-deep);font-size:0.9rem;">'+r.course+'</div>'+
             '<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">'+dateStr+' · '+r.holes_played+'H · Par '+r.par+'</div>'+
@@ -3035,14 +2980,21 @@ function toggleEditProfile(){ setEditProfile(!editProfileMode); }
 // ── PROFILE ───────────────────────────────────────────────────────────────
 var profileData=null, favourites=[], profileSearchTimer=null;
 
+var SVG_FLAG='<svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
+var SVG_CAL='<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+var SVG_TROPHY='<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
+var SVG_STAR='<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+var SVG_MEDAL='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+var SVG_TARGET='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+var SVG_ZAP='<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
 var ACHIEVEMENTS=[
-  {id:'first_round',name:'First Round',desc:'Log your first round',icon:'🏌️',check:function(r){return r.length>=1;}},
-  {id:'ten_rounds',name:'10 Rounds',desc:'Log 10 rounds',icon:'📅',check:function(r){return r.length>=10;}},
-  {id:'fifty_rounds',name:'50 Rounds',desc:'Log 50 rounds',icon:'🏆',check:function(r){return r.length>=50;}},
-  {id:'broke_90',name:'Broke 90',desc:'Score under 90',icon:'⭐',check:function(r){return r.some(function(x){return x.score<90;});}},
-  {id:'broke_80',name:'Broke 80',desc:'Score under 80',icon:'🌟',check:function(r){return r.some(function(x){return x.score<80;});}},
-  {id:'single_figures',name:'Single Figures',desc:'Reach a handicap under 10',icon:'🎯',check:function(r){var h=calcHcp(r);return h!==null&&h<10;}},
-  {id:'scratch_diff',name:'Scratch Differential',desc:'Record a differential under 0',icon:'🦅',check:function(r){return r.some(function(x){return x.diff<0;});}}
+  {id:'first_round',name:'First Round',desc:'Log your first round',icon:SVG_FLAG,check:function(r){return r.length>=1;}},
+  {id:'ten_rounds',name:'10 Rounds',desc:'Log 10 rounds',icon:SVG_CAL,check:function(r){return r.length>=10;}},
+  {id:'fifty_rounds',name:'50 Rounds',desc:'Log 50 rounds',icon:SVG_TROPHY,check:function(r){return r.length>=50;}},
+  {id:'broke_90',name:'Broke 90',desc:'Score under 90',icon:SVG_STAR,check:function(r){return r.some(function(x){return x.score<90;});}},
+  {id:'broke_80',name:'Broke 80',desc:'Score under 80',icon:SVG_MEDAL,check:function(r){return r.some(function(x){return x.score<80;});}},
+  {id:'single_figures',name:'Single Figures',desc:'Reach a handicap under 10',icon:SVG_TARGET,check:function(r){var h=calcHcp(r);return h!==null&&h<10;}},
+  {id:'scratch_diff',name:'Scratch Differential',desc:'Record a differential under 0',icon:SVG_ZAP,check:function(r){return r.some(function(x){return x.diff<0;});}}
 ];
 
 async function loadProfile(){
@@ -3266,7 +3218,7 @@ function renderSocietiesList(){
   if(!societies.length){el.innerHTML='<div style="color:var(--text-muted);font-style:italic;font-size:0.88rem;padding:20px 0;">You haven\'t joined any societies yet. Create one or enter an invite code.</div>';return;}
   el.innerHTML=societies.map(function(s){
     return '<div class="society-card" data-id="'+s.id+'" data-name="'+s.name+'" data-code="'+s.invite_code+'">'+
-      '<div style="width:40px;height:40px;background:var(--augusta);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">⛳</div>'+
+      '<div style="width:40px;height:40px;background:var(--augusta);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"</div>'+
       '<div><div class="society-card-name">'+s.name+'</div><div class="society-card-meta">Code: '+s.invite_code+'</div></div>'+
       '<div style="margin-left:auto;font-family:\'Inter\',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-muted);">View →</div>'+
     '</div>';
@@ -4028,7 +3980,7 @@ async function loadFeed(){
             '<span class="feed-name">'+name+(isYou?' <span style="font-size:0.62rem;color:var(--gold);">(you)</span>':'')+'</span>'+
             followBtn+
           '</div>'+
-          '<div class="feed-detail">⛳ '+round.course+' · '+fDate(round.date)+(round.holes_played===9?' · 9H':'')+'</div>'+
+          '<div class="feed-detail">'+round.course+' · '+fDate(round.date)+(round.holes_played===9?' · 9H':'')+'</div>'+
         '</div>'+
         '<div style="text-align:right;flex-shrink:0;">'+
           '<div style="font-family:\'Inter\',serif;font-size:1.8rem;font-weight:700;color:var(--augusta-deep);line-height:1;">'+round.score+'</div>'+
@@ -4122,7 +4074,7 @@ async function issueChallenge(){
   if(r.error){toast('Error: '+r.error.message);return;}
   clearChallengeOpponent();clearChallengeCourse();
   document.getElementById('challengeMyScore').value='';
-  toast('Challenge issued to '+challengeOpponent_.name+' ⚔️');
+  toast('Challenge issued to '+challengeOpponent_.name+'');
   loadChallenges();
 }
 
@@ -4135,7 +4087,7 @@ async function loadChallenges(){
   var my=challenges.filter(function(c){return c.challenger_id===currentUser.id;});
   incoming.innerHTML=inc.length?inc.map(function(c){
     return '<div class="challenge-card">'+
-      '<div class="challenge-vs">⚔️ '+c.challenger_name+' challenges you</div>'+
+      '<div class="challenge-vs">'+c.challenger_name+' challenges you</div>'+
       '<div class="challenge-meta">'+c.course_name+' · Beat '+c.challenger_score+' · '+c.format+'</div>'+
       '<div style="display:flex;gap:8px;margin-top:10px;">'+
         '<button class="accept-challenge-btn log-btn" data-id="'+c.id+'" style="flex:1;padding:8px;font-size:0.72rem;">Accept</button>'+
@@ -4148,7 +4100,7 @@ async function loadChallenges(){
     var statusLabel=c.status==='pending'?'PENDING':c.status==='accepted'?'ACCEPTED':c.status==='declined'?'DECLINED':c.status.toUpperCase();
     return '<div class="challenge-card">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;">'+
-        '<div class="challenge-vs">⚔️ vs '+c.opponent_name+'</div>'+
+        '<div class="challenge-vs">vs '+c.opponent_name+'</div>'+
         '<span class="'+statusCls+'">'+statusLabel+'</span>'+
       '</div>'+
       '<div class="challenge-meta">'+c.course_name+' · Your score: '+c.challenger_score+' · '+c.format+'</div>'+
@@ -4158,7 +4110,7 @@ async function loadChallenges(){
 
 async function respondChallenge(id,status){
   await sb.from('challenges').update({status:status}).eq('id',id);
-  toast(status==='accepted'?'Challenge accepted! ⚔️':'Challenge declined.');
+  toast(status==='accepted'?'Challenge accepted!':'Challenge declined.');
   loadChallenges();
 }
 
@@ -4171,7 +4123,7 @@ async function loadTournaments(){
   el.innerHTML=tourneys.map(function(t){
     var active=new Date(t.end_date)>=new Date();
     return '<div class="tourney-card" data-id="'+t.id+'" data-name="'+t.name+'" data-dates="'+fDate(t.start_date)+' – '+fDate(t.end_date)+'" data-format="'+t.format+'">'+
-      '<div style="width:40px;height:40px;background:'+(active?'var(--gold)':'var(--panel)')+';border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem;">🏆</div>'+
+      '<div style="width:40px;height:40px;background:'+(active?'var(--gold)':'var(--panel)')+';border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0d0e10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>'+
       '<div>'+
         '<div class="tourney-name">'+t.name+'</div>'+
         '<div class="tourney-meta">'+fDate(t.start_date)+' – '+fDate(t.end_date)+' · '+t.format+(active?' · <span style="color:var(--under);font-weight:700;">ACTIVE</span>':' · Ended')+'</div>'+
@@ -4399,7 +4351,7 @@ function scheduleNotification(reminder){
   if(delay<=0) return;
   setTimeout(function(){
     if(Notification.permission==='granted'){
-      new Notification('⛳ Tee Time Reminder',{
+      new Notification('Tee Time Reminder',{
         body:'You tee off at '+reminder.course+' in '+reminder.before+' minutes!',
         icon:'/favicon.ico'
       });
@@ -4423,7 +4375,7 @@ function renderReminders(){
     var t=new Date(r.teeTime);
     var timeStr=t.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' at '+t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     return '<div class="reminder-item">'+
-      '<div class="reminder-item-name">⛳ '+r.course+'</div>'+
+      '<div class="reminder-item-name">'+r.course+'</div>'+
       '<div class="reminder-item-time">'+timeStr+' (−'+r.before+'min)</div>'+
       '<button class="reminder-delete" data-id="'+r.id+'">✕</button>'+
     '</div>';
@@ -4656,7 +4608,7 @@ async function runGlobalSearch(q){
     html+='<div class="gs-category">Courses</div>';
     html+=courses.map(function(c){
       return '<div class="gs-result" data-type="course" data-name="'+encodeURIComponent(c.name)+'">'+
-        '<div class="gs-result-icon">⛳</div>'+
+        '<div class="gs-result-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"</div>'+
         '<div><div class="gs-result-name">'+c.name+'</div>'+
         '<div class="gs-result-sub">'+c.location+(c.county?', '+c.county:'')+' · Par '+c.par+' · '+c.holes+'H</div></div>'+
         '<span class="gs-result-badge">Course</span></div>';
@@ -4668,7 +4620,7 @@ async function runGlobalSearch(q){
     html+=tourneys.map(function(t){
       var active=new Date(t.end_date)>=new Date();
       return '<div class="gs-result" data-type="tournament" data-id="'+t.id+'" data-name="'+encodeURIComponent(t.name)+'" data-format="'+t.format+'" data-dates="'+fDate(t.start_date)+' – '+fDate(t.end_date)+'">'+
-        '<div class="gs-result-icon">🏆</div>'+
+        '<div class="gs-result-icon"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0d0e10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>'+
         '<div><div class="gs-result-name">'+t.name+'</div>'+
         '<div class="gs-result-sub">'+fDate(t.start_date)+' – '+fDate(t.end_date)+' · '+t.format+'</div></div>'+
         '<span class="gs-result-badge" style="'+(active?'color:var(--under);border-color:var(--under);':'')+'">'+( active?'Active':'Ended')+'</span></div>';
