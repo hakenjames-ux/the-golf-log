@@ -679,8 +679,8 @@ header::before{
 .expand-toggle:hover{background:var(--augusta-pale);color:var(--augusta-deep);}
 .expand-toggle.open{background:var(--augusta);color:white;border-color:var(--augusta);}
 .expand-toggle.open span{opacity:0.7;}
-.mob-menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:6px;margin-left:4px;}
-.mob-menu-toggle:active{background:rgba(255,255,255,0.1);}
+.mob-menu-toggle{display:none;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);cursor:pointer;padding:8px 12px;margin-left:4px;border-radius:var(--radius);transition:all 0.15s;}
+.mob-menu-toggle:active{background:rgba(47,158,91,0.2);transform:scale(0.96);}
 @media(max-width:768px){
   .profile-layout{grid-template-columns:1fr !important;}
   .profile-sidenav{position:static;overflow:visible;display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:16px;}
@@ -688,27 +688,11 @@ header::before{
   .profile-sidenav-item svg{width:18px;height:18px;}
   .profile-sidenav-item.active{border-bottom:2px solid var(--gold);background:var(--panel);}
 }
-/* Mobile nav — hidden by default, shown only on mobile */
-.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:1px solid var(--border);z-index:9000;padding:6px 0 env(safe-area-inset-bottom,0);box-shadow:0 -6px 24px rgba(0,0,0,0.4);}
-.mobile-nav-log{
-  width:50px;height:50px;border-radius:50%;flex-shrink:0;
-  background:var(--augusta);color:var(--ink);border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  margin-top:-24px;box-shadow:0 4px 16px rgba(0,0,0,0.45);
-  transition:transform 0.15s,background 0.15s;
-}
-.mobile-nav-log:active{transform:scale(0.94);}
-.mobile-nav-inner{display:flex;justify-content:space-around;align-items:center;}
-.mobile-nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px;background:none;border:none;cursor:pointer;color:var(--text-muted);font-family:'Inter',sans-serif;font-size:0.55rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;min-width:48px;transition:color 0.15s;}
-.mobile-nav-btn.active{color:var(--augusta);}
-.mobile-nav-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
-/* Bottom nav removed — header hamburger used instead */
-#mNavMenuBtn{display:none !important;}
 @media(max-width:768px){
-  /* Navigation */
-  .mob-menu-toggle{display:none !important;}
-  .mobile-nav{display:block;}
-  .container{padding-bottom:96px !important;}
+  /* Navigation — header menu button opens the drawer (reliable on mobile Safari) */
+  .mob-menu-toggle{display:flex !important;align-items:center;justify-content:center;}
+  .user-name{display:none !important;}
+  .sign-out-btn{display:none !important;}
   #appShell nav,#appShell .header-nav{display:none;}
   /* Header */
   .header-top{padding:0 12px;min-height:56px;}
@@ -1903,7 +1887,10 @@ html{overflow-x:hidden;}
 <div id="mobileMenuOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:8998;" onclick="closeMobileMenu()"></div>
 <div id="mobileMenuDrawer" style="display:none;position:fixed;top:0;left:0;right:0;background:var(--white);z-index:8999;max-height:100vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
   <div style="background:var(--ink);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
-    <div style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);">Navigation</div>
+    <div>
+      <div style="font-family:'Inter',sans-serif;font-size:0.6rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);">Signed in as</div>
+      <div id="drawerUserName" style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-top:2px;">—</div>
+    </div>
     <button onclick="closeMobileMenu()" style="background:none;border:none;color:rgba(255,255,255,0.7);font-size:1.4rem;cursor:pointer;line-height:1;padding:0;">✕</button>
   </div>
   <button class="mobile-menu-item" onclick="mobileMenuNav('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Home</span></button>
@@ -1911,18 +1898,8 @@ html{overflow-x:hidden;}
   <button class="mobile-menu-item" onclick="closeMobileMenu();openLogModal();"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Log a Round</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('social')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
   <button class="mobile-menu-item" onclick="mobileMenuNav('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
+  <button class="mobile-menu-item" onclick="closeMobileMenu();doSignOut();" style="color:var(--text-muted);"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Sign Out</span></button>
 </div>
-
-<!-- Mobile bottom tab bar -->
-<nav class="mobile-nav" id="mobileTabBar">
-  <div class="mobile-nav-inner">
-    <button class="mobile-nav-btn active" id="mTabHome"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></button>
-    <button class="mobile-nav-btn" id="mTabCourses"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Courses</span></button>
-    <button class="mobile-nav-log" id="mTabLog" aria-label="Log a Round"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" fill="none" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
-    <button class="mobile-nav-btn" id="mTabSocial"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Social</span></button>
-    <button class="mobile-nav-btn" id="mTabProfile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></button>
-  </div>
-</nav>
 
 </div><!-- /appShell -->
 
@@ -1952,6 +1929,7 @@ async function bootApp(u){
   currentUser=u;
   var name=u.user_metadata&&u.user_metadata.display_name ? u.user_metadata.display_name : u.email.split('@')[0];
   document.getElementById("userPill").textContent=name;
+  var drawerName=document.getElementById("drawerUserName"); if(drawerName) drawerName.textContent=name;
   var dashName=document.getElementById("dashUserName"); if(dashName) dashName.textContent=name;
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('appShell').style.display='block';
@@ -1991,14 +1969,6 @@ document.addEventListener('click',function(e){
   if(id==='navDashboard'){showSection('dashboard',e.target);return;}
   if(id==='navCourses'){showSection('courses',e.target);return;}
   if(id==='navLog'){openLogModal();return;}
-  // Mobile bottom tab bar
-  var mtab=e.target.closest('.mobile-nav-btn,.mobile-nav-log');
-  if(mtab){
-    var mid=mtab.id;
-    if(mid==='mTabLog'){openLogModal();return;}
-    var mmapNav={mTabHome:'dashboard',mTabCourses:'courses',mTabSocial:'social',mTabProfile:'profile'};
-    if(mmapNav[mid]){showSection(mmapNav[mid],null);return;}
-  }
   if(id==='navSocial'){showSection('social',e.target);return;}
   if(id==='navProfile'){showSection('profile',e.target);return;}
   // Stats / Leaderboard reachable via buttons (no longer top-nav)
@@ -3928,11 +3898,6 @@ function mobileMenuNav(section){
   closeMobileMenu();
   var desktopMap={dashboard:'navDashboard',courses:'navCourses',social:'navSocial',profile:'navProfile'};
   showSection(section,document.getElementById(desktopMap[section]));
-  var bottomMap={dashboard:'mNavDashboard',courses:'mNavCourses',stats:'mNavStats',profile:'mNavProfile'};
-  document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
-  var bottomId=bottomMap[section];
-  if(bottomId) document.getElementById(bottomId).classList.add('active');
-  document.querySelectorAll('.mobile-menu-item').forEach(function(b){b.classList.remove('active-section');});
 }
 
 // ── ANIMATED COUNTERS ─────────────────────────────────────────────────────
@@ -4560,10 +4525,6 @@ function showSection(s,btn,skipHistory){
     var map={dashboard:'navDashboard',courses:'navCourses',social:'navSocial',profile:'navProfile',stats:'navDashboard'};
     var nb=document.getElementById(map[s]); if(nb) nb.classList.add('active');
   }
-  // Sync mobile bottom tab bar
-  document.querySelectorAll('.mobile-nav-btn').forEach(function(b){b.classList.remove('active');});
-  var mTabMap={dashboard:'mTabHome',courses:'mTabCourses',social:'mTabSocial',profile:'mTabProfile',stats:'mTabHome'};
-  var mt=document.getElementById(mTabMap[s]); if(mt) mt.classList.add('active');
   // Update URL hash
   if(!skipHistory) history.pushState({section:s},'','#'+s);
   if(s==='courses') renderCoursesBrowser();
