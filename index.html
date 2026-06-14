@@ -472,6 +472,13 @@ header::before{
 .empty-state-title{font-family:'Inter',sans-serif;font-size:1rem;font-weight:700;color:var(--augusta-deep);margin-bottom:var(--s1);}
 .empty-state-sub{font-size:0.82rem;color:var(--text-muted);line-height:1.5;max-width:340px;margin:0 auto var(--s4);}
 
+/* ── ONBOARDING ── */
+.ob-dot{width:8px;height:8px;border-radius:50%;background:var(--border-strong);transition:all 0.25s;}
+.ob-dot.active{background:var(--augusta);width:24px;border-radius:4px;}
+.ob-headline{font-family:'Inter',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-0.02em;color:var(--augusta-deep);margin-bottom:8px;line-height:1.2;}
+.ob-sub{font-size:0.9rem;color:var(--text-muted);line-height:1.55;margin-bottom:26px;}
+.ob-step{animation:fadeUp 0.3s ease both;}
+
 /* ── MICRO-INTERACTIONS + DEPTH ── */
 .panel,.scorecard-hero{box-shadow:inset 0 1px 0 rgba(255,255,255,0.04),var(--shadow-sm);}
 .modal-box{box-shadow:inset 0 1px 0 rgba(255,255,255,0.05),0 24px 80px rgba(0,0,0,0.6);}
@@ -1879,6 +1886,75 @@ html{overflow-x:hidden;}
   </div>
 </div>
 
+<!-- ONBOARDING OVERLAY -->
+<div id="onboardOverlay" style="display:none;position:fixed;inset:0;z-index:10001;background:var(--off-white);overflow-y:auto;">
+  <div style="max-width:460px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;padding:28px 20px 32px;box-sizing:border-box;">
+
+    <!-- Top: brand + skip -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <div style="font-family:'Inter',sans-serif;font-size:1.3rem;font-weight:800;letter-spacing:0.04em;color:#fff;">LMG</div>
+      <button id="obSkipAll" onclick="finishOnboarding(false)" style="background:none;border:none;color:var(--text-muted);font-size:0.82rem;font-weight:500;cursor:pointer;">Skip for now</button>
+    </div>
+
+    <!-- Progress dots -->
+    <div style="display:flex;gap:6px;margin-bottom:28px;">
+      <div class="ob-dot active"></div>
+      <div class="ob-dot"></div>
+      <div class="ob-dot"></div>
+    </div>
+
+    <!-- STEP 1: Welcome — name + home course -->
+    <div class="ob-step" id="obStep1">
+      <div class="ob-headline">Welcome to LMG 👋</div>
+      <div class="ob-sub">Let's set up your profile. First, what should we call you and where do you play?</div>
+
+      <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <input class="form-input" id="obName" type="text" placeholder="e.g. James H" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Home / Membership Course</label>
+        <div class="csearch-wrap">
+          <input class="form-input" id="obHomeSearch" type="text" placeholder="Search your home club…" autocomplete="off">
+          <div class="csearch-dropdown" id="obHomeDropdown"></div>
+        </div>
+        <div id="obHomeSelected" style="display:none;margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Favourites -->
+    <div class="ob-step" id="obStep2" style="display:none;">
+      <div class="ob-headline">Your favourite courses</div>
+      <div class="ob-sub">Add a few courses you love playing. You can always change these later.</div>
+
+      <div class="form-group">
+        <label class="form-label">Add a Favourite Course</label>
+        <div class="csearch-wrap">
+          <input class="form-input" id="obFavSearch" type="text" placeholder="Search courses…" autocomplete="off">
+          <div class="csearch-dropdown" id="obFavDropdown"></div>
+        </div>
+      </div>
+      <div id="obFavList" style="margin-top:4px;"></div>
+    </div>
+
+    <!-- STEP 3: First round -->
+    <div class="ob-step" id="obStep3" style="display:none;">
+      <div class="ob-headline">Log your first round</div>
+      <div class="ob-sub">This is where it all starts — record a round and your handicap updates automatically. You can edit or delete it any time.</div>
+      <button class="log-btn" onclick="finishOnboarding(true)" style="width:100%;margin-bottom:12px;">Log My First Round</button>
+      <button onclick="finishOnboarding(false)" style="width:100%;background:none;border:1px solid var(--border);color:var(--text-mid);border-radius:var(--radius);padding:12px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;">I'll do this later</button>
+    </div>
+
+    <!-- Footer nav -->
+    <div style="margin-top:auto;display:flex;gap:12px;padding-top:28px;">
+      <button id="obBackBtn" onclick="obBack()" style="visibility:hidden;background:none;border:1px solid var(--border);color:var(--text-mid);border-radius:var(--radius);padding:12px 22px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;">Back</button>
+      <button id="obNextBtn" onclick="obNext()" class="log-btn" style="flex:1;margin:0;">Continue</button>
+    </div>
+
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- Dark mode toggle -->
@@ -1944,6 +2020,8 @@ async function bootApp(u){
   var startSection=location.hash.replace('#','').split('?')[0]||'dashboard';
   showSection(startSection,null,true);
   history.replaceState({section:startSection},'','#'+startSection);
+  // First-run onboarding for brand-new users
+  checkOnboarding();
 }
 
 function showAuthScreen(){
@@ -2032,6 +2110,10 @@ document.addEventListener('click',function(e){
   if(hopt&&hopt.dataset.idx){pickHomeCourse(hopt.dataset.idx);return;}
   var fopt=e.target.closest('#favCourseDropdown .csearch-opt');
   if(fopt&&fopt.dataset.idx){addFavourite(fopt.dataset.idx,fopt.dataset.name);return;}
+  var obh=e.target.closest('#obHomeDropdown .csearch-opt');
+  if(obh&&obh.dataset.idx){obPickHome(obh.dataset.idx);return;}
+  var obf=e.target.closest('#obFavDropdown .csearch-opt');
+  if(obf&&obf.dataset.idx){obAddFav(obf.dataset.idx,obf.dataset.name);return;}
   var fremove=e.target.closest('.fav-remove');
   if(fremove&&fremove.dataset.id){removeFavourite(fremove.dataset.id);return;}
   if(id==='homeClearBtn'){clearHomeCourse();return;}
@@ -2090,6 +2172,8 @@ document.addEventListener('input',function(e){
   if(e.target.id==='courseBrowserSearch'){renderCoursesBrowser();return;}
   if(e.target.id==='homeCourseSearch'){searchProfileCourses('home',e.target.value);return;}
   if(e.target.id==='favCourseSearch'){searchProfileCourses('fav',e.target.value);return;}
+  if(e.target.id==='obHomeSearch'){obSearchCourses('home',e.target.value);return;}
+  if(e.target.id==='obFavSearch'){obSearchCourses('fav',e.target.value);return;}
   if(e.target.id==='challengeOpponentSearch'){searchMembers(e.target.value);return;}
   if(e.target.id==='challengeCourseSearch'){searchChallengeCourse(e.target.value);return;}
 });
@@ -3226,6 +3310,118 @@ function renderFavourites(){
   el.innerHTML=favourites.map(function(f){
     return '<div class="fav-item">'+f.course_name+'<button class="fav-remove" data-id="'+f.id+'">✕</button></div>';
   }).join('');
+}
+
+// ── ONBOARDING ─────────────────────────────────────────────────────────────
+var obStep=1, obSearchTimers={home:null,fav:null};
+
+async function checkOnboarding(){
+  // Never onboard someone who already has rounds (existing users / re-logins)
+  if(rounds.length>0) return;
+  var onboarded=false;
+  try{
+    var pr=await sb.from('profiles').select('onboarded').eq('id',currentUser.id).maybeSingle();
+    onboarded=!!(pr.data&&pr.data.onboarded);
+  }catch(e){}
+  if(!onboarded) startOnboarding();
+}
+
+function startOnboarding(){
+  if(!profileData) profileData={id:currentUser.id,is_public:true,home_course_name:null,home_course_id:null};
+  var name=(currentUser.user_metadata&&currentUser.user_metadata.display_name)||currentUser.email.split('@')[0];
+  document.getElementById('obName').value=name;
+  renderObHome();
+  renderObFavs();
+  obGoStep(1);
+  document.getElementById('onboardOverlay').style.display='block';
+}
+
+function obGoStep(n){
+  obStep=n;
+  for(var i=1;i<=3;i++){ document.getElementById('obStep'+i).style.display=(i===n?'block':'none'); }
+  document.querySelectorAll('.ob-dot').forEach(function(d,i){ d.classList.toggle('active',i===(n-1)); });
+  document.getElementById('obBackBtn').style.visibility=(n>1?'visible':'hidden');
+  document.getElementById('obNextBtn').style.display=(n<3?'inline-flex':'none');
+}
+
+function obBack(){ if(obStep>1) obGoStep(obStep-1); }
+function obNext(){
+  if(obStep===1){ obSaveName(); obGoStep(2); }
+  else if(obStep===2){ obGoStep(3); }
+}
+
+async function obSaveName(){
+  var name=document.getElementById('obName').value.trim();
+  if(!name) return;
+  var cur=(currentUser.user_metadata&&currentUser.user_metadata.display_name)||'';
+  if(name===cur) return;
+  var r=await sb.auth.updateUser({data:{display_name:name}});
+  await sb.from('profiles').upsert({id:currentUser.id,display_name:name});
+  if(!r.error&&r.data){
+    currentUser=r.data.user;
+    document.getElementById('userPill').textContent=name;
+    var dn=document.getElementById('drawerUserName'); if(dn) dn.textContent=name;
+    var dsh=document.getElementById('dashUserName'); if(dsh) dsh.textContent=name;
+  }
+}
+
+async function obSearchCourses(type,q){
+  var dd=document.getElementById(type==='home'?'obHomeDropdown':'obFavDropdown');
+  if(!q||q.length<2){dd.classList.remove('open');return;}
+  dd.innerHTML='<div class="csearch-opt" style="color:#aaa;font-style:italic;cursor:default;font-size:0.82rem;">Searching…</div>';
+  dd.classList.add('open');
+  clearTimeout(obSearchTimers[type]);
+  obSearchTimers[type]=setTimeout(async function(){
+    var ql=q.toLowerCase();
+    var r=await sb.from('courses').select('id,name,location').or('name.ilike.*'+ql+'*,location.ilike.*'+ql+'*').order('name').limit(8);
+    if(!r.data||!r.data.length){dd.innerHTML='<div class="csearch-opt" style="color:#aaa;cursor:default;font-style:italic;font-size:0.82rem;">No courses found</div>';return;}
+    window['_pc_'+type]=r.data; // reused by pickHomeCourse
+    window['_ob_'+type]=r.data;
+    dd.innerHTML=r.data.map(function(c){
+      return '<div class="csearch-opt" data-idx="'+c.id+'" data-name="'+c.name.replace(/"/g,'&quot;')+'"><div class="copt-name">'+c.name+'</div><div class="copt-meta">'+c.location+'</div></div>';
+    }).join('');
+    dd.classList.add('open');
+  },300);
+}
+
+function obPickHome(id){
+  document.getElementById('obHomeDropdown').classList.remove('open');
+  pickHomeCourse(id).then(renderObHome);
+}
+function obAddFav(id,name){
+  document.getElementById('obFavDropdown').classList.remove('open');
+  addFavourite(id,name).then(renderObFavs);
+}
+function obRemoveFav(id){ removeFavourite(id).then(renderObFavs); }
+function obClearHome(){ clearHomeCourse().then(renderObHome); }
+
+function renderObHome(){
+  var el=document.getElementById('obHomeSelected');
+  var inp=document.getElementById('obHomeSearch'); if(inp) inp.value='';
+  if(!el) return;
+  if(profileData&&profileData.home_course_name){
+    el.style.display='block';
+    el.innerHTML='<div class="selected-course"><span>'+profileData.home_course_name+'</span><button onclick="obClearHome()">✕</button></div>';
+  } else { el.style.display='none'; el.innerHTML=''; }
+}
+function renderObFavs(){
+  var el=document.getElementById('obFavList');
+  var inp=document.getElementById('obFavSearch'); if(inp) inp.value='';
+  if(!el) return;
+  if(!favourites.length){ el.innerHTML=''; return; }
+  el.innerHTML=favourites.map(function(f){
+    return '<div class="fav-item">'+f.course_name+'<button class="fav-remove" onclick="obRemoveFav(\''+f.id+'\')">✕</button></div>';
+  }).join('');
+}
+
+async function finishOnboarding(openLog){
+  document.getElementById('onboardOverlay').style.display='none';
+  try{
+    await sb.from('profiles').upsert({id:currentUser.id,onboarded:true,display_name:(currentUser.user_metadata&&currentUser.user_metadata.display_name)||currentUser.email.split('@')[0]});
+  }catch(e){}
+  // Refresh dashboard so any home course / name changes show through
+  renderAll();
+  if(openLog) openLogModal();
 }
 
 function renderAchievements(){
