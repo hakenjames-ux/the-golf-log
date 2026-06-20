@@ -2116,6 +2116,8 @@ document.addEventListener('click',function(e){
   if(obf&&obf.dataset.idx){obAddFav(obf.dataset.idx,obf.dataset.name);return;}
   var fremove=e.target.closest('.fav-remove');
   if(fremove&&fremove.dataset.id){removeFavourite(fremove.dataset.id);return;}
+  var mpd=e.target.closest('.my-photo-del');
+  if(mpd&&mpd.dataset.id){deleteMyPhoto(mpd.dataset.id,mpd.dataset.url);return;}
   if(id==='homeClearBtn'){clearHomeCourse();return;}
   if(id==='clearCourseBtn'){clearCourseSelection();return;}
   // Course search dropdown (log form only — exclude profile/challenge dropdowns)
@@ -4020,11 +4022,31 @@ async function loadMyPhotos(){
   var cnt=document.getElementById('myPhotoCount'); if(cnt) cnt.textContent=photos.length;
   if(!photos.length){ grid.innerHTML='<div style="font-size:0.82rem;color:var(--text-muted);font-style:italic;">No photos yet. Add some from a course’s Review window.</div>'; return; }
   grid.innerHTML=photos.map(function(p){
-    return '<a href="'+p.url+'" target="_blank" style="display:block;">'+
-      '<img src="'+p.url+'" style="width:100%;height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">'+
-      '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(p.course_name||'')+'</div>'+
-    '</a>';
+    return '<div style="position:relative;">'+
+      '<a href="'+p.url+'" target="_blank" style="display:block;">'+
+        '<img src="'+p.url+'" style="width:100%;height:90px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">'+
+        '<div style="font-size:0.62rem;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(p.course_name||'')+'</div>'+
+      '</a>'+
+      '<button class="my-photo-del" data-id="'+p.id+'" data-url="'+p.url+'" title="Remove photo" style="position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,0.62);color:#fff;border:none;cursor:pointer;font-size:0.68rem;line-height:1;display:flex;align-items:center;justify-content:center;">✕</button>'+
+    '</div>';
   }).join('');
+}
+
+function storagePathFromUrl(url){
+  var marker='/course-photos/';
+  var i=url.indexOf(marker);
+  if(i<0) return null;
+  return url.slice(i+marker.length).split('?')[0];
+}
+
+async function deleteMyPhoto(id,url){
+  if(!confirm('Remove this photo? It will be removed from your profile and the course gallery.')) return;
+  var del=await sb.from('course_photos').delete().eq('id',id).eq('user_id',currentUser.id);
+  if(del.error){toast('Error removing photo: '+del.error.message);return;}
+  var path=storagePathFromUrl(url);
+  if(path){ try{ await sb.storage.from('course-photos').remove([path]); }catch(e){} }
+  toast('Photo removed');
+  loadMyPhotos();
 }
 
 async function submitReview(){
