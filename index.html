@@ -1336,6 +1336,12 @@ html{overflow-x:hidden;}
     <button onclick="exportStatsPDF()" style="background:none;border:1px solid var(--border);border-radius:var(--radius);padding:8px 16px;font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';">Export Stats</button>
   </div>
 
+  <!-- Signature handicap gauge -->
+  <div class="panel" style="margin-bottom:24px;background:var(--ink);border-color:var(--border);text-align:center;padding:30px 24px 26px;">
+    <div id="hcpGauge" style="display:flex;justify-content:center;min-height:200px;align-items:center;"></div>
+    <div id="hcpGaugeSub" style="font-size:0.82rem;color:rgba(255,255,255,0.5);margin-top:4px;"></div>
+  </div>
+
   <!-- Handicap history chart -->
   <div class="panel chart-panel" style="margin-bottom:24px;">
     <div class="section-head">
@@ -2950,16 +2956,35 @@ function rChart(){
 var hcpHistoryChartObj=null, breakdownChartObj=null, statTrendChartObj=null, currentStatChart='putts';
 
 function renderStats(){
-  if(!rounds.length){
-    document.getElementById('avgStats').innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-style:italic;padding:20px;">No rounds logged yet.</div>';
-    return;
-  }
+  renderHcpGauge();
+  if(!rounds.length) return;
   // Small delay ensures canvas elements are painted and sized before Chart.js runs
   setTimeout(function(){
     renderHcpHistory();
     renderBreakdown();
     renderStatTrend('putts');
   }, 50);
+}
+
+function renderHcpGauge(){
+  var el=document.getElementById('hcpGauge'); if(!el) return;
+  var hcp=calcHcp(rounds);
+  var R=84, circ=2*Math.PI*R, track=circ*0.75;
+  var frac=hcp===null?0:Math.max(0,Math.min(1,(36-hcp)/36));
+  var fill=track*frac;
+  var col=hcp===null?'rgba(255,255,255,0.25)':(hcp<5?'#5ad65a':hcp<15?'#2f9e5b':'#3fb06b');
+  var hcpStr=hcp===null?'—':(hcp<=0?'+'+Math.abs(hcp):hcp.toFixed(1));
+  el.innerHTML='<svg viewBox="0 0 200 200" style="width:210px;max-width:62%;height:auto;">'+
+    '<circle cx="100" cy="100" r="84" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+track+' '+circ+'" transform="rotate(135 100 100)"/>'+
+    '<circle cx="100" cy="100" r="84" fill="none" stroke="'+col+'" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+fill+' '+circ+'" transform="rotate(135 100 100)"/>'+
+    '<text x="100" y="96" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="46" font-weight="800" letter-spacing="-1">'+hcpStr+'</text>'+
+    '<text x="100" y="120" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-family="Inter,sans-serif" font-size="9.5" font-weight="600" letter-spacing="1.5">HANDICAP INDEX</text>'+
+  '</svg>';
+  var sub=document.getElementById('hcpGaugeSub');
+  if(sub){
+    if(hcp===null){ sub.textContent=rounds.length+' of 3 rounds needed to calculate'; }
+    else { var bd=Math.min.apply(null,rounds.map(function(r){return r.diff;})); sub.textContent='Best differential '+parseFloat(bd).toFixed(1)+' · '+rounds.length+' rounds logged'; }
+  }
 }
 
 function renderHcpHistory(){
