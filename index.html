@@ -3782,64 +3782,97 @@ function selectShareRound(id){
   drawScorecard(selectedShareRound);
 }
 
+function scWrap(ctx,text,maxW,maxLines){
+  var words=String(text).split(' '),lines=[],cur='';
+  for(var i=0;i<words.length;i++){
+    var test=cur?cur+' '+words[i]:words[i];
+    if(ctx.measureText(test).width>maxW&&cur){ lines.push(cur); cur=words[i]; }
+    else cur=test;
+  }
+  if(cur) lines.push(cur);
+  if(lines.length>maxLines){
+    lines=lines.slice(0,maxLines);
+    var last=lines[maxLines-1];
+    while(ctx.measureText(last+'…').width>maxW&&last.length){ last=last.slice(0,-1); }
+    lines[maxLines-1]=last+'…';
+  }
+  return lines;
+}
+
 function drawScorecard(r){
   var canvas=document.getElementById('scorecardCanvas');
-  var W=600,H=320;
-  canvas.width=W; canvas.height=H;
+  var scale=2, W=540, H=675;
+  canvas.width=W*scale; canvas.height=H*scale;
+  canvas.style.width='100%'; canvas.style.aspectRatio='540 / 675';
   var ctx=canvas.getContext('2d');
-  // Background
-  ctx.fillStyle='#0d0e10';
-  ctx.fillRect(0,0,W,H);
-  // Accent bar
-  ctx.fillStyle='#2f9e5b';
-  ctx.fillRect(0,0,W,4);
-  // Logo text
-  ctx.fillStyle='#2f9e5b';
-  ctx.font='bold 13px "Inter", sans-serif';
-  ctx.letterSpacing='3px';
-  ctx.fillText('LMG',24,32);
-  // Course name
-  ctx.fillStyle='#ffffff';
-  ctx.font='bold 26px "Inter", serif';
-  ctx.fillText(r.course,24,72);
-  // Date
-  ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.font='13px "Inter", sans-serif';
-  ctx.fillText(fDate(r.date),24,95);
-  // Divider
-  ctx.strokeStyle='rgba(255,255,255,0.12)';
-  ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(24,112);ctx.lineTo(W-24,112);ctx.stroke();
-  // Stats
-  var stats=[
-    {label:'SCORE',val:r.score},
-    {label:'PAR',val:r.par},
-    {label:r.score-r.par===0?'EVEN':r.score-r.par>0?'+'+( r.score-r.par):''+( r.score-r.par),val:'vs PAR'},
-    {label:'DIFF',val:parseFloat(r.diff).toFixed(1)},
-    {label:'HCP',val:(function(){var h=calcHcp(rounds);return h!==null?(h<=0?'+'+Math.abs(h):h.toFixed(1)):'—';})()}
-  ];
-  var sw=( W-48)/stats.length;
-  stats.forEach(function(s,i){
-    var x=24+i*sw+sw/2;
-    ctx.fillStyle='rgba(255,255,255,0.3)';
-    ctx.font='600 10px "Inter", sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText(s.label,x,148);
-    ctx.fillStyle='#ffffff';
-    ctx.font='bold 36px "Inter", serif';
-    ctx.fillText(s.val,x,192);
-  });
-  ctx.textAlign='left';
-  // Bottom bar
-  ctx.fillStyle='rgba(47,158,91,0.15)';
-  ctx.fillRect(0,H-50,W,50);
-  ctx.fillStyle='rgba(255,255,255,0.4)';
-  ctx.font='11px "Inter", sans-serif';
-  ctx.fillText('Logged on LMG · '+window.location.hostname,24,H-18);
-  // Score colour indicator
+  ctx.scale(scale,scale);
+
   var ov=r.score-r.par;
-  ctx.fillStyle=ov<0?'#5ad65a':ov>0?'#ff6b6b':'#e8c97a';
-  ctx.fillRect(W-8,0,8,H);
+  var accent=ov<0?'#5ad65a':ov>0?'#ff6b6b':'#e8c97a';
+  var P=44;
+
+  // Background + glow
+  ctx.fillStyle='#0a0a0b'; ctx.fillRect(0,0,W,H);
+  var g=ctx.createRadialGradient(W*0.82,H*0.10,10,W*0.82,H*0.10,W*0.95);
+  g.addColorStop(0,'rgba(47,158,91,0.30)'); g.addColorStop(1,'rgba(47,158,91,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  var g2=ctx.createRadialGradient(W*0.1,H*0.96,10,W*0.1,H*0.96,W*0.8);
+  g2.addColorStop(0,'rgba(255,255,255,0.05)'); g2.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
+
+  // Top row
+  ctx.textBaseline='alphabetic';
+  ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 26px Inter, sans-serif';
+  try{ctx.letterSpacing='1px';}catch(e){}
+  ctx.fillText('LMG',P,68);
+  ctx.textAlign='right'; ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='700 11px Inter, sans-serif';
+  try{ctx.letterSpacing='3px';}catch(e){}
+  ctx.fillText('ROUND CARD',W-P,64);
+  try{ctx.letterSpacing='0px';}catch(e){}
+
+  // Course + date
+  ctx.textAlign='left'; ctx.fillStyle='#fff'; ctx.font='800 34px Inter, sans-serif';
+  var lines=scWrap(ctx,r.course,W-P*2,2), cy=132;
+  lines.forEach(function(ln){ ctx.fillText(ln,P,cy); cy+=38; });
+  ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.font='500 15px Inter, sans-serif';
+  ctx.fillText(fDate(r.date)+(r.holes_played===9?'  ·  9 holes':''),P,cy);
+
+  // Hero score
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='700 12px Inter, sans-serif';
+  try{ctx.letterSpacing='3px';}catch(e){}
+  ctx.fillText('SCORE',W/2,300);
+  try{ctx.letterSpacing='0px';}catch(e){}
+  ctx.fillStyle='#fff'; ctx.font='800 150px Inter, sans-serif';
+  try{ctx.letterSpacing='-4px';}catch(e){}
+  ctx.fillText(String(r.score),W/2,422);
+  try{ctx.letterSpacing='0px';}catch(e){}
+  var vsTxt=ov===0?'LEVEL PAR':(Math.abs(ov)+(ov<0?' UNDER PAR':' OVER PAR'));
+  ctx.fillStyle=accent; ctx.font='800 22px Inter, sans-serif';
+  ctx.fillText(vsTxt,W/2,458);
+
+  // Stats row
+  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(P,512);ctx.lineTo(W-P,512);ctx.stroke();
+  var hcp=calcHcp(rounds), hcpStr=hcp!==null?(hcp<=0?'+'+Math.abs(hcp):hcp.toFixed(1)):'—';
+  var stats=[{l:'PAR',v:String(r.par)},{l:'DIFFERENTIAL',v:parseFloat(r.diff).toFixed(1)},{l:'HANDICAP',v:hcpStr}];
+  var colW=(W-P*2)/3;
+  stats.forEach(function(s,i){
+    var x=P+colW*i+colW/2;
+    ctx.fillStyle='#fff'; ctx.font='800 30px Inter, sans-serif'; ctx.textAlign='center';
+    ctx.fillText(s.v,x,572);
+    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='600 10px Inter, sans-serif';
+    try{ctx.letterSpacing='1.5px';}catch(e){}
+    ctx.fillText(s.l,x,594);
+    try{ctx.letterSpacing='0px';}catch(e){}
+  });
+
+  // Footer
+  ctx.fillStyle=accent; ctx.fillRect(0,H-6,W,6);
+  ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.font='700 13px Inter, sans-serif';
+  ctx.fillText('logmygolf.com',P,H-28);
+  var myName=(currentUser&&currentUser.user_metadata&&currentUser.user_metadata.display_name)||'';
+  if(myName){ ctx.textAlign='right'; ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='500 13px Inter, sans-serif'; ctx.fillText(myName,W-P,H-28); }
 }
 
 function downloadScorecard(){
