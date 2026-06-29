@@ -15,6 +15,8 @@ const assets = [
   'sw.js',
   'privacy.html',
   'terms.html',
+  'css',
+  'js',
   'icons',
   'assets',
 ];
