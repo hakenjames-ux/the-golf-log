@@ -3,10 +3,12 @@
    - Navigations (the app shell): network-first, fall back to cached index.html
      when offline. Keeps users on the latest deploy when online; lets the app
      open offline once it has been visited.
-   - Static icons/manifest: cache-first.
-   - Supabase API, fonts CSS, analytics: never cached (always go to network).
+   - App code (/js/, /css/): network-first with cache fallback — fresh when
+     online, still works offline.
+   - Icons/assets: cache-first (rarely change).
+   - Supabase API and other cross-origin calls: never cached.
 */
-const VERSION = 'lmg-v1';
+const VERSION = 'lmg-v2';
 const SHELL = `${VERSION}-shell`;
 const STATIC = `${VERSION}-static`;
 
@@ -14,6 +16,19 @@ const PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
+  '/css/styles.css',
+  '/js/config.js',
+  '/js/boot.js',
+  '/js/auth.js',
+  '/js/rounds.js',
+  '/js/courses.js',
+  '/js/dashboard.js',
+  '/js/stats.js',
+  '/js/profile.js',
+  '/js/social.js',
+  '/js/share.js',
+  '/js/reviews-weather.js',
+  '/js/ui.js',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/icon-180.png',
@@ -41,34 +56,35 @@ self.addEventListener('fetch', (event) => {
 
   // Never intercept Supabase or other cross-origin API/data calls.
   if (url.hostname.endsWith('supabase.co')) return;
+  if (url.origin !== self.location.origin) return;
 
-  // App-shell navigations: network-first with offline fallback.
-  if (request.mode === 'navigate') {
+  // App-shell navigations + app code (/js/, /css/): network-first, cache fallback.
+  const isAppCode = url.pathname.startsWith('/js/') || url.pathname.startsWith('/css/');
+  if (request.mode === 'navigate' || isAppCode) {
+    const cacheKey = request.mode === 'navigate' ? '/index.html' : request;
     event.respondWith(
       fetch(request)
         .then((res) => {
           const copy = res.clone();
-          caches.open(SHELL).then((c) => c.put('/index.html', copy));
+          caches.open(SHELL).then((c) => c.put(cacheKey, copy));
           return res;
         })
-        .catch(() => caches.match('/index.html').then((r) => r || caches.match('/')))
+        .catch(() => caches.match(cacheKey).then((r) => r || caches.match('/')))
     );
     return;
   }
 
-  // Local static assets (icons, manifest): cache-first.
-  if (url.origin === self.location.origin) {
-    event.respondWith(
-      caches.match(request).then((cached) =>
-        cached ||
-        fetch(request).then((res) => {
-          if (res.ok && (url.pathname.startsWith('/icons/') || url.pathname.startsWith('/assets/'))) {
-            const copy = res.clone();
-            caches.open(STATIC).then((c) => c.put(request, copy));
-          }
-          return res;
-        })
-      )
-    );
-  }
+  // Icons/assets: cache-first.
+  event.respondWith(
+    caches.match(request).then((cached) =>
+      cached ||
+      fetch(request).then((res) => {
+        if (res.ok && (url.pathname.startsWith('/icons/') || url.pathname.startsWith('/assets/'))) {
+          const copy = res.clone();
+          caches.open(STATIC).then((c) => c.put(request, copy));
+        }
+        return res;
+      })
+    )
+  );
 });
