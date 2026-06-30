@@ -853,11 +853,14 @@ function initAvatarUpload(){
     var file=this.files[0];
     if(!file) return;
     if(file.size>2*1024*1024){toast('Image must be under 2MB.');return;}
-    var ext=file.name.split('.').pop();
+    var ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
     var path=currentUser.id+'/avatar.'+ext;
     var btn=document.getElementById('avatarDisplay');
     btn.style.opacity='0.5';
-    var r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type});
+    // Fall back to an inferred image/* type so empty file.type (e.g. iOS HEIC) still
+    // satisfies the bucket's allowed_mime_types restriction.
+    var contentType=file.type||PHOTO_MIME[ext]||'image/jpeg';
+    var r=await sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:contentType});
     btn.style.opacity='1';
     if(r.error){toast('Upload failed: '+r.error.message);return;}
     var pub=sb.storage.from('avatars').getPublicUrl(path);
